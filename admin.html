@@ -3,107 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Portal - JejakKota</title>
+  <title>Admin Dashboard - jelaja.com</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F6F9F7; color: #1A2E26; }
+  </style>
 </head>
-<body class="bg-gray-900 text-gray-900 min-h-screen p-4 flex items-center justify-center">
+<body class="p-4 sm:p-8">
 
-  <!-- Layar Login Khusus Admin -->
-  <div id="adminLoginBox" class="max-w-sm w-full bg-white rounded-3xl p-6 shadow-2xl space-y-4">
-    <div class="text-center">
-      <span class="bg-yellow-400 text-gray-900 text-[10px] font-black px-2.5 py-1 rounded-full">RESTRICTED AREA</span>
-      <h1 class="font-black text-xl mt-2">Admin JejakKota</h1>
-      <p class="text-xs text-gray-500">Masuk dengan akun administrator untuk mengelola rute, travel, hotel & tarif.</p>
-    </div>
-    <form id="adminLoginForm" class="space-y-3">
-      <input type="email" id="admEmail" required placeholder="Email Admin" class="w-full p-3 bg-gray-50 border rounded-xl text-xs">
-      <input type="password" id="admPass" required placeholder="Password Admin" class="w-full p-3 bg-gray-50 border rounded-xl text-xs">
-      <button type="submit" class="w-full py-3 bg-gray-900 text-yellow-400 font-bold text-xs rounded-xl">Masuk Panel Admin</button>
-    </form>
-  </div>
-
-  <!-- Dashboard Admin (Muncul setelah login) -->
-  <div id="adminDashboard" class="hidden max-w-md w-full bg-white rounded-3xl shadow-2xl p-6 space-y-4 my-4">
-    <div class="flex justify-between items-center border-b pb-3">
+  <div class="max-w-4xl mx-auto space-y-6">
+    
+    <!-- HEADER ADMIN -->
+    <div class="bg-[#2D5A4C] text-white p-6 rounded-3xl shadow-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
-        <h1 class="font-black text-lg">Panel Kelola Destinasi</h1>
-        <p id="adminEmailLabel" class="text-[11px] text-gray-500">-</p>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="bg-white/20 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">ADMIN PANEL</span>
+          <span class="text-xs text-[#C5DDD5]">jelaja.com Management</span>
+        </div>
+        <h1 class="text-xl font-extrabold">Kelola Destinasi & Konten Super-App</h1>
       </div>
-      <button onclick="adminLogout()" class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1.5 rounded-xl">Logout</button>
+      <a href="index.html" class="bg-white text-[#2D5A4C] font-bold text-xs px-4 py-2.5 rounded-full shadow hover:bg-[#E3EDE7] transition flex items-center gap-2">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Web Utama
+      </a>
     </div>
 
-    <form id="destForm" class="space-y-3">
-      <div>
-        <label class="text-[11px] font-bold">Nama Tujuan Utama</label>
-        <input type="text" id="d_name" placeholder="Contoh: Danau Toba / Parapat" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
-      </div>
-      <div class="grid grid-cols-3 gap-2">
+    <!-- FORM TAMBAH / EDIT DESTINASI -->
+    <div class="bg-white border border-[#E3EDE7] rounded-3xl p-6 shadow-sm space-y-4">
+      <h2 class="font-bold text-sm text-[#1A2E26] flex items-center gap-2 border-b border-[#E8EFEA] pb-3">
+        <i class="fa-solid fa-circle-plus text-[#2D5A4C]"></i> Tambah Kota / Destinasi Baru
+      </h2>
+
+      <form id="addDestinationForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
         <div>
-          <label class="text-[11px] font-bold">Label Chip</label>
-          <input type="text" id="d_short" placeholder="Parapat" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+          <label class="font-bold text-[#4A6358] block mb-1">Nama Kota / Destinasi</label>
+          <input type="text" id="destName" required placeholder="Contoh: Danau Toba & Parapat" class="w-full p-3 bg-[#F6F9F7] border border-[#DCE6E0] rounded-2xl focus:outline-none focus:border-[#2D5A4C]">
         </div>
         <div>
-          <label class="text-[11px] font-bold">Ikon Emoji</label>
-          <input type="text" id="d_icon" value="🌋" class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+          <label class="font-bold text-[#4A6358] block mb-1">Label Singkat / Tag</label>
+          <input type="text" id="destShortLabel" required placeholder="Contoh: Parapat" class="w-full p-3 bg-[#F6F9F7] border border-[#DCE6E0] rounded-2xl focus:outline-none focus:border-[#2D5A4C]">
         </div>
         <div>
-          <label class="text-[11px] font-bold">Jenis Area</label>
-          <select id="d_intercity" class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs font-bold">
-            <option value="false">Dalam Kota</option>
-            <option value="true">Luar Kota (Travel)</option>
-          </select>
+          <label class="font-bold text-[#4A6358] block mb-1">Kategori / Badge</label>
+          <input type="text" id="destBadge" required placeholder="Contoh: Danau & Resort" class="w-full p-3 bg-[#F6F9F7] border border-[#DCE6E0] rounded-2xl focus:outline-none focus:border-[#2D5A4C]">
         </div>
-      </div>
-      <div class="grid grid-cols-2 gap-2">
-        <input type="number" step="any" id="d_lat" placeholder="Latitude (2.6626)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
-        <input type="number" step="any" id="d_lng" placeholder="Longitude (98.9344)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
+        <div>
+          <label class="font-bold text-[#4A6358] block mb-1">URL Foto Estetis (Opsional)</label>
+          <input type="url" id="destImage" placeholder="https://images.unsplash.com/..." class="w-full p-3 bg-[#F6F9F7] border border-[#DCE6E0] rounded-2xl focus:outline-none focus:border-[#2D5A4C]">
+        </div>
+        <div>
+          <label class="font-bold text-[#4A6358] block mb-1">Latitude (Koordinat Peta)</label>
+          <input type="text" id="destLat" value="2.6658" required class="w-full p-3 bg-[#F6F9F7] border border-[#DCE6E0] rounded-2xl">
+        </div>
+        <div>
+          <label class="font-bold text-[#4A6358] block mb-1">Longitude (Koordinat Peta)</label>
+          <input type="text" id="destLng" value="98.9555" required class="w-full p-3 bg-[#F6F9F7] border border-[#DCE6E0] rounded-2xl">
+        </div>
+
+        <div class="sm:col-span-2 pt-2">
+          <button type="submit" id="btnSubmitDest" class="w-full py-3 bg-[#2D5A4C] hover:bg-[#1E4035] text-white font-bold text-xs rounded-2xl shadow-md transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Simpan Destinasi ke Database
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- TABEL DAFTAR DESTINASI YANG ADA -->
+    <div class="bg-white border border-[#E3EDE7] rounded-3xl p-6 shadow-sm space-y-4">
+      <div class="flex justify-between items-center border-b border-[#E8EFEA] pb-3">
+        <h2 class="font-bold text-sm text-[#1A2E26] flex items-center gap-2">
+          <i class="fa-solid fa-database text-[#2D5A4C]"></i> Daftar Destinasi di Firestore
+        </h2>
+        <button onclick="loadAdminDestinations()" class="text-xs font-bold text-[#2D5A4C] hover:underline">
+          <i class="fa-solid fa-rotate mr-1"></i> Refresh Data
+        </button>
       </div>
 
-      <hr>
-      <p class="font-extrabold text-xs text-yellow-700">🚐 Transportasi / Rute Utama ke Tujuan</p>
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="text-[10px] text-gray-500">Keyword Titik Asal Rute</label>
-          <input type="text" id="t_origin_kw" placeholder="Misal: Medan / Kualanamu" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
-        </div>
-        <div>
-          <label class="text-[10px] text-gray-500">Tarif Rute (Rp)</label>
-          <input type="number" id="t_price" placeholder="120000" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
-        </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="bg-[#F0F5F2] text-[#4A6358]">
+              <th class="p-3 rounded-l-xl">Destinasi</th>
+              <th class="p-3">Kategori</th>
+              <th class="p-3">Koordinat</th>
+              <th class="p-3 rounded-r-xl text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="adminDestTableBody" class="divide-y divide-[#E8EFEA]">
+            <tr>
+              <td colspan="4" class="p-4 text-center text-[#7A9186]">Memuat data dari database...</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <input type="text" id="t_name" placeholder="Judul Rute (misal: Travel HiAce Nice Trans)" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
-      <div class="grid grid-cols-2 gap-2">
-        <input type="text" id="t_tag" placeholder="Label Tag (EKSEKUTIF • DIRECT)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
-        <input type="number" id="t_dur" placeholder="Total Menit (210)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
-      </div>
-      <input type="text" id="t_guide" placeholder="Panduan lengkap perjalanan rute ini..." required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+    </div>
 
-      <hr>
-      <p class="font-extrabold text-xs text-yellow-700">✨ Wisata / Kafe Favorit di Sekitar</p>
-      <input type="text" id="p_name" placeholder="Nama Tempat (misal: Pantai Bebas Parapat)" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
-      <div class="grid grid-cols-2 gap-2">
-        <input type="text" id="p_cat" placeholder="Kategori (Wisata Danau)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
-        <input type="number" id="p_price" placeholder="Est. Biaya Tiket (15000)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
-      </div>
-      <input type="text" id="p_desc" placeholder="Deskripsi singkat..." required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
-
-      <hr>
-      <p class="font-extrabold text-xs text-blue-700">🏨 Hotel Terdekat</p>
-      <input type="text" id="h_name" placeholder="Nama Hotel (misal: Niagara Hotel)" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
-      <div class="grid grid-cols-2 gap-2">
-        <input type="text" id="h_stars" placeholder="⭐⭐⭐⭐" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
-        <input type="number" id="h_price" placeholder="Harga/malam (780000)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
-      </div>
-      <input type="text" id="h_note" placeholder="Catatan lokasi hotel..." required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
-
-      <button type="submit" class="w-full py-3 bg-gray-900 text-yellow-400 font-bold text-xs rounded-xl">Simpan Destinasi ke Firebase</button>
-    </form>
   </div>
 
+  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     // TODO: TEMPEL FIREBASE CONFIG LO DI SINI
     const firebaseConfig = {
@@ -118,84 +119,80 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const auth = getAuth(app);
 
-    const ADMIN_EMAIL = ""; // Masukkan email admin lo di sini jika ingin dikunci
-
-    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
+    async function loadAdminDestinations() {
+      const tbody = document.getElementById('adminDestTableBody');
       try {
-        await signInWithEmailAndPassword(auth, document.getElementById('admEmail').value, document.getElementById('admPass').value);
-      } catch (err) {
-        alert("Login gagal: " + err.message);
-      }
-    });
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) {
-          alert("Akses ditolak! Bukan akun administrator.");
-          signOut(auth);
+        const snap = await getDocs(collection(db, "destinations_v4"));
+        if (snap.empty) {
+          tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-[#7A9186]">Belum ada data destinasi.</td></tr>`;
           return;
         }
-        document.getElementById('adminLoginBox').classList.add('hidden');
-        document.getElementById('adminDashboard').classList.remove('hidden');
-        document.getElementById('adminEmailLabel').innerText = "Login: " + user.email;
-      } else {
-        document.getElementById('adminLoginBox').classList.remove('hidden');
-        document.getElementById('adminDashboard').classList.add('hidden');
+        tbody.innerHTML = "";
+        snap.forEach(documentItem => {
+          const d = documentItem.data();
+          tbody.innerHTML += `
+            <tr class="hover:bg-[#F8FAF9] transition">
+              <td class="p-3 font-bold text-[#1A2E26]">${d.name}</td>
+              <td class="p-3"><span class="bg-[#E3EDE7] text-[#2D5A4C] px-2 py-0.5 rounded-full text-[10px] font-bold">${d.badge || 'Explore'}</span></td>
+              <td class="p-3 text-[#5C7268]">${d.lat || '-'}, ${d.lng || '-'}</td>
+              <td class="p-3 text-right">
+                <button onclick="deleteDestination('${documentItem.id}')" class="bg-red-50 text-red-600 hover:bg-red-100 px-2.5 py-1.5 rounded-xl font-bold text-[10px]">
+                  <i class="fa-solid fa-trash"></i> Hapus
+                </button>
+              </td>
+            </tr>`;
+        });
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-500">Gagal memuat: ${e.message}</td></tr>`;
+      }
+    }
+
+    document.getElementById('addDestinationForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('destName').value.trim();
+      const short_label = document.getElementById('destShortLabel').value.trim();
+      const badge = document.getElementById('destBadge').value.trim();
+      const image = document.getElementById('destImage').value.trim() || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80";
+      const lat = parseFloat(document.getElementById('destLat').value);
+      const lng = parseFloat(document.getElementById('destLng').value);
+
+      const newDest = {
+        name, short_label, badge, image, lat, lng,
+        guide_steps: [
+          `Mulai perjalanan dari titik asal menuju rute utama ke ${name}.`,
+          `Ikuti jalur transportasi utama dengan estimasi perjalanan yang nyaman.`,
+          `Tiba di lokasi dan nikmati eksplorasi serta kuliner sekitar.`
+        ],
+        routes: [{ tag: "REGULER", title: `Transportasi / Bus ke ${short_label}`, total_duration: 90, total_price: 45000 }],
+        cafes: [{ name: `Kafe & Resto Sekitar ${short_label}`, cat: "Kuliner", price: 30000, desc: "Tempat nongkrong favorit." }],
+        souvenirs: [{ name: `Pusat Oleh-Oleh Khas ${short_label}`, desc: "Sentra cinderamata lokal." }],
+        hotels: [{ name: `Hotel Nyaman di ${short_label}`, stars: "⭐⭐⭐", price: 500000, note: "Fasilitas lengkap" }]
+      };
+
+      try {
+        await addDoc(collection(db, "destinations_v4"), newDest);
+        alert("✅ Destinasi berhasil ditambahkan!");
+        document.getElementById('addDestinationForm').reset();
+        loadAdminDestinations();
+      } catch (err) {
+        alert("⚠️ Gagal menyimpan: " + err.message);
       }
     });
 
-    window.adminLogout = () => signOut(auth);
+    window.deleteDestination = async (id) => {
+      if (confirm("Yakin ingin menghapus destinasi ini dari database?")) {
+        try {
+          await deleteDoc(doc(db, "destinations_v4", id));
+          alert("🗑️ Destinasi berhasil dihapus!");
+          loadAdminDestinations();
+        } catch (err) {
+          alert("Gagal menghapus: " + err.message);
+        }
+      }
+    };
 
-    document.getElementById('destForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const lat = Number(document.getElementById('d_lat').value);
-      const lng = Number(document.getElementById('d_lng').value);
-      const isIntercity = document.getElementById('d_intercity').value === 'true';
-
-      await addDoc(collection(db, "destinations_v4"), {
-        name: document.getElementById('d_name').value,
-        short_label: document.getElementById('d_short').value,
-        badge: isIntercity ? "Travel Luar Kota" : "Dalam Kota",
-        icon: document.getElementById('d_icon').value,
-        is_intercity: isIntercity,
-        lat, lng,
-        routes: [{
-          origin_keyword: document.getElementById('t_origin_kw').value,
-          tag: document.getElementById('t_tag').value,
-          title: document.getElementById('t_name').value,
-          total_duration: Number(document.getElementById('t_dur').value),
-          total_price: Number(document.getElementById('t_price').value),
-          legs: [{
-            icon: isIntercity ? "🚐" : "🚌",
-            short_name: document.getElementById('t_name').value.split(' ')[0],
-            mode_title: document.getElementById('t_name').value,
-            duration_min: Number(document.getElementById('t_dur').value),
-            price: Number(document.getElementById('t_price').value),
-            instruction: document.getElementById('t_guide').value
-          }]
-        }],
-        places: [{
-          name: document.getElementById('p_name').value,
-          cat: document.getElementById('p_cat').value,
-          price: Number(document.getElementById('p_price').value),
-          lat: lat + 0.001, lng: lng + 0.001,
-          desc: document.getElementById('p_desc').value
-        }],
-        hotels: [{
-          name: document.getElementById('h_name').value,
-          stars: document.getElementById('h_stars').value,
-          price: Number(document.getElementById('h_price').value),
-          lat: lat - 0.001, lng: lng + 0.001,
-          note: document.getElementById('h_note').value
-        }]
-      });
-
-      alert("Destinasi & rute berhasil disimpan ke Firebase!");
-      e.target.reset();
-    });
+    loadAdminDestinations();
   </script>
 </body>
 </html>
