@@ -1,0 +1,15 @@
+{
+  "name": "JejakKota - Panduan Transportasi & Wisata",
+  "short_name": "JejakKota",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/854/854878.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

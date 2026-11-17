@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - JejakKota</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-900 min-h-screen p-4 flex items-center justify-center">
+
+  <!-- Layar Login Khusus Admin -->
+  <div id="adminLoginBox" class="max-w-sm w-full bg-white rounded-3xl p-6 shadow-2xl space-y-4">
+    <div class="text-center">
+      <span class="bg-yellow-400 text-gray-900 text-[10px] font-black px-2.5 py-1 rounded-full">RESTRICTED AREA</span>
+      <h1 class="font-black text-xl mt-2">Admin JejakKota</h1>
+      <p class="text-xs text-gray-500">Masuk dengan akun administrator untuk mengelola rute, travel, hotel & tarif.</p>
+    </div>
+    <form id="adminLoginForm" class="space-y-3">
+      <input type="email" id="admEmail" required placeholder="Email Admin" class="w-full p-3 bg-gray-50 border rounded-xl text-xs">
+      <input type="password" id="admPass" required placeholder="Password Admin" class="w-full p-3 bg-gray-50 border rounded-xl text-xs">
+      <button type="submit" class="w-full py-3 bg-gray-900 text-yellow-400 font-bold text-xs rounded-xl">Masuk Panel Admin</button>
+    </form>
+  </div>
+
+  <!-- Dashboard Admin (Muncul setelah login) -->
+  <div id="adminDashboard" class="hidden max-w-md w-full bg-white rounded-3xl shadow-2xl p-6 space-y-4 my-4">
+    <div class="flex justify-between items-center border-b pb-3">
+      <div>
+        <h1 class="font-black text-lg">Panel Kelola Destinasi</h1>
+        <p id="adminEmailLabel" class="text-[11px] text-gray-500">-</p>
+      </div>
+      <button onclick="adminLogout()" class="bg-red-100 text-red-700 text-xs font-bold px-3 py-1.5 rounded-xl">Logout</button>
+    </div>
+
+    <form id="destForm" class="space-y-3">
+      <div>
+        <label class="text-[11px] font-bold">Nama Tujuan Utama</label>
+        <input type="text" id="d_name" placeholder="Contoh: Danau Toba / Parapat" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="text-[11px] font-bold">Label Chip</label>
+          <input type="text" id="d_short" placeholder="Parapat" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+        </div>
+        <div>
+          <label class="text-[11px] font-bold">Ikon Emoji</label>
+          <input type="text" id="d_icon" value="🌋" class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+        </div>
+        <div>
+          <label class="text-[11px] font-bold">Jenis Area</label>
+          <select id="d_intercity" class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs font-bold">
+            <option value="false">Dalam Kota</option>
+            <option value="true">Luar Kota (Travel)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <input type="number" step="any" id="d_lat" placeholder="Latitude (2.6626)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
+        <input type="number" step="any" id="d_lng" placeholder="Longitude (98.9344)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
+      </div>
+
+      <hr>
+      <p class="font-extrabold text-xs text-yellow-700">🚐 Transportasi / Rute Utama ke Tujuan</p>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[10px] text-gray-500">Keyword Titik Asal Rute</label>
+          <input type="text" id="t_origin_kw" placeholder="Misal: Medan / Kualanamu" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+        </div>
+        <div>
+          <label class="text-[10px] text-gray-500">Tarif Rute (Rp)</label>
+          <input type="number" id="t_price" placeholder="120000" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+        </div>
+      </div>
+      <input type="text" id="t_name" placeholder="Judul Rute (misal: Travel HiAce Nice Trans)" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="text" id="t_tag" placeholder="Label Tag (EKSEKUTIF • DIRECT)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
+        <input type="number" id="t_dur" placeholder="Total Menit (210)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
+      </div>
+      <input type="text" id="t_guide" placeholder="Panduan lengkap perjalanan rute ini..." required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+
+      <hr>
+      <p class="font-extrabold text-xs text-yellow-700">✨ Wisata / Kafe Favorit di Sekitar</p>
+      <input type="text" id="p_name" placeholder="Nama Tempat (misal: Pantai Bebas Parapat)" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="text" id="p_cat" placeholder="Kategori (Wisata Danau)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
+        <input type="number" id="p_price" placeholder="Est. Biaya Tiket (15000)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
+      </div>
+      <input type="text" id="p_desc" placeholder="Deskripsi singkat..." required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+
+      <hr>
+      <p class="font-extrabold text-xs text-blue-700">🏨 Hotel Terdekat</p>
+      <input type="text" id="h_name" placeholder="Nama Hotel (misal: Niagara Hotel)" required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="text" id="h_stars" placeholder="⭐⭐⭐⭐" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
+        <input type="number" id="h_price" placeholder="Harga/malam (780000)" required class="p-2.5 bg-gray-50 border rounded-xl text-xs">
+      </div>
+      <input type="text" id="h_note" placeholder="Catatan lokasi hotel..." required class="w-full p-2.5 bg-gray-50 border rounded-xl text-xs">
+
+      <button type="submit" class="w-full py-3 bg-gray-900 text-yellow-400 font-bold text-xs rounded-xl">Simpan Destinasi ke Firebase</button>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // TODO: TEMPEL FIREBASE CONFIG LO DI SINI
+    const firebaseConfig = {
+  apiKey: "AIzaSyCG1I6jOsyO9nGRJcplpZgSiq0wQ383PJ4",
+  authDomain: "jejakkota.firebaseapp.com",
+  projectId: "jejakkota",
+  storageBucket: "jejakkota.firebasestorage.app",
+  messagingSenderId: "429613663188",
+  appId: "1:429613663188:web:dfb74e49f00188b8c1cc41",
+  measurementId: "G-21H5VGCZX2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const ADMIN_EMAIL = ""; // Masukkan email admin lo di sini jika ingin dikunci
+
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await signInWithEmailAndPassword(auth, document.getElementById('admEmail').value, document.getElementById('admPass').value);
+      } catch (err) {
+        alert("Login gagal: " + err.message);
+      }
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (ADMIN_EMAIL && user.email !== ADMIN_EMAIL) {
+          alert("Akses ditolak! Bukan akun administrator.");
+          signOut(auth);
+          return;
+        }
+        document.getElementById('adminLoginBox').classList.add('hidden');
+        document.getElementById('adminDashboard').classList.remove('hidden');
+        document.getElementById('adminEmailLabel').innerText = "Login: " + user.email;
+      } else {
+        document.getElementById('adminLoginBox').classList.remove('hidden');
+        document.getElementById('adminDashboard').classList.add('hidden');
+      }
+    });
+
+    window.adminLogout = () => signOut(auth);
+
+    document.getElementById('destForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const lat = Number(document.getElementById('d_lat').value);
+      const lng = Number(document.getElementById('d_lng').value);
+      const isIntercity = document.getElementById('d_intercity').value === 'true';
+
+      await addDoc(collection(db, "destinations_v4"), {
+        name: document.getElementById('d_name').value,
+        short_label: document.getElementById('d_short').value,
+        badge: isIntercity ? "Travel Luar Kota" : "Dalam Kota",
+        icon: document.getElementById('d_icon').value,
+        is_intercity: isIntercity,
+        lat, lng,
+        routes: [{
+          origin_keyword: document.getElementById('t_origin_kw').value,
+          tag: document.getElementById('t_tag').value,
+          title: document.getElementById('t_name').value,
+          total_duration: Number(document.getElementById('t_dur').value),
+          total_price: Number(document.getElementById('t_price').value),
+          legs: [{
+            icon: isIntercity ? "🚐" : "🚌",
+            short_name: document.getElementById('t_name').value.split(' ')[0],
+            mode_title: document.getElementById('t_name').value,
+            duration_min: Number(document.getElementById('t_dur').value),
+            price: Number(document.getElementById('t_price').value),
+            instruction: document.getElementById('t_guide').value
+          }]
+        }],
+        places: [{
+          name: document.getElementById('p_name').value,
+          cat: document.getElementById('p_cat').value,
+          price: Number(document.getElementById('p_price').value),
+          lat: lat + 0.001, lng: lng + 0.001,
+          desc: document.getElementById('p_desc').value
+        }],
+        hotels: [{
+          name: document.getElementById('h_name').value,
+          stars: document.getElementById('h_stars').value,
+          price: Number(document.getElementById('h_price').value),
+          lat: lat - 0.001, lng: lng + 0.001,
+          note: document.getElementById('h_note').value
+        }]
+      });
+
+      alert("Destinasi & rute berhasil disimpan ke Firebase!");
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>
