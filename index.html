@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>jelaja.com - Your Journey, Intelligently Planned</title>
+  <title>jelaja.com - Panduan Rute & Transit Perjalanan</title>
   <meta name="theme-color" content="#2D5A4C">
   <link rel="manifest" href="manifest.json">
   
@@ -20,14 +20,14 @@
     .font-serif-title { font-family: 'Playfair Display', serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    #map { height: 195px; width: 100%; z-index: 10; border-radius: 1.25rem; }
+    #map { height: 210px; width: 100%; z-index: 10; border-radius: 1.25rem; }
   </style>
 </head>
 <body>
 
-  <div class="max-w-md mx-auto min-h-screen bg-[#F6F9F7] shadow-2xl flex flex-col relative pb-28">
+  <div class="max-w-md mx-auto min-h-screen bg-[#F6F9F7] shadow-2xl flex flex-col relative pb-24">
     
-    <!-- TOP BAR (Muncul di tab Explore, Budget, Itinerary) -->
+    <!-- TOP HEADER -->
     <header id="mainTopHeader" class="px-5 pt-5 pb-3 flex justify-between items-center bg-[#F6F9F7]/90 backdrop-blur-md sticky top-0 z-30">
       <div class="flex items-center gap-2.5">
         <div class="w-9 h-9 rounded-2xl bg-[#2D5A4C] text-white flex items-center justify-center shadow-md shadow-[#2D5A4C]/20">
@@ -35,7 +35,7 @@
         </div>
         <div>
           <span class="font-extrabold text-sm tracking-tight text-[#1A2E26] block leading-none">jelaja.com</span>
-          <span id="greetingSub" class="text-[10px] text-[#5C7268] font-medium">Welcome Back, Traveler</span>
+          <span id="greetingSub" class="text-[10px] text-[#5C7268] font-medium">Panduan Rute & Transportasi</span>
         </div>
       </div>
 
@@ -50,24 +50,23 @@
     <!-- Banner Seed Data -->
     <div id="seedBanner" class="hidden mx-5 my-2 p-4 bg-[#E3EDE7] border border-dashed border-[#2D5A4C]/40 rounded-3xl text-center">
       <p class="text-xs font-bold text-[#1A2E26] mb-1">Database jelaja.com Masih Kosong</p>
-      <p class="text-[10px] text-[#4A6358] mb-3">Klik tombol di bawah untuk memuat destinasi visual, kafe, dan toko oleh-oleh.</p>
+      <p class="text-[10px] text-[#4A6358] mb-3">Klik tombol di bawah untuk memuat data rute dan transportasi.</p>
       <button onclick="seedSuperAppData()" id="btnSeed" class="bg-[#2D5A4C] text-white font-bold text-xs px-4 py-2 rounded-full shadow-md">
-        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Muat Data Destinasi
+        <i class="fa-solid fa-database mr-1"></i> Muat Data Rute
       </button>
     </div>
 
     <!-- ========================================== -->
-    <!-- TAB 1: EXPLORE DESTINATION                 -->
+    <!-- TAB 1: RUTE & PANDUAN TRANSIT (FOKUS UTAMA)-->
     <!-- ========================================== -->
-    <main id="tab-explore" class="flex-1 px-5 space-y-5">
+    <main id="tab-explore" class="flex-1 px-5 space-y-4">
       
-      <!-- Hero Title & Floating Search Card -->
+      <!-- Kotak Pencarian Asal & Tujuan -->
       <section class="space-y-3 pt-1">
-        <h1 class="font-serif-title text-2xl font-bold text-[#1A2E26] leading-tight">
-          Your Journey,<br><span class="text-[#2D5A4C]">Intelligently Planned.</span>
+        <h1 class="font-serif-title text-xl font-bold text-[#1A2E26] leading-tight">
+          Mau ke mana hari ini?<br><span class="text-[#2D5A4C]">Cek rute, tarif & kendaraan.</span>
         </h1>
 
-        <!-- Search Box Pill Style -->
         <div class="bg-white p-3 rounded-3xl shadow-[0_8px_30px_rgb(45,90,76,0.06)] border border-[#E3EDE7] space-y-2.5">
           <div class="flex items-center gap-2.5 border-b border-[#F0F5F2] pb-2">
             <span class="w-2 h-2 rounded-full bg-emerald-600 shrink-0 ml-1"></span>
@@ -80,343 +79,152 @@
           
           <div class="flex items-center gap-2.5">
             <i class="fa-solid fa-magnifying-glass text-[#2D5A4C] text-xs ml-0.5"></i>
-            <input type="text" id="destinationInput" list="destSuggestions" placeholder="Where do you want to go?" class="bg-transparent font-bold text-xs w-full focus:outline-none text-[#1A2E26] placeholder-[#8CA197]" onchange="handleDestinationSearch()" onkeyup="if(event.key==='Enter') handleDestinationSearch()">
+            <input type="text" id="destinationInput" list="destSuggestions" placeholder="Mau ke mana? (Contoh: Berastagi)" class="bg-transparent font-bold text-xs w-full focus:outline-none text-[#1A2E26] placeholder-[#8CA197]" onchange="handleDestinationSearch()" onkeyup="if(event.key==='Enter') handleDestinationSearch()">
             <datalist id="destSuggestions"></datalist>
-            <button onclick="handleDestinationSearch()" class="bg-[#2D5A4C] hover:bg-[#1E4035] text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full shadow-sm shrink-0 transition">
-              Jelajah
+            <button onclick="handleDestinationSearch()" class="bg-[#2D5A4C] hover:bg-[#1E4035] text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-sm shrink-0 transition">
+              Cari Rute
             </button>
           </div>
         </div>
       </section>
 
-      <!-- Quick Action Pills -->
-      <section class="flex gap-2 overflow-x-auto no-scrollbar py-0.5">
-        <button onclick="openServiceModal('travel')" class="shrink-0 px-3.5 py-2 rounded-full bg-[#2D5A4C] text-white text-[11px] font-bold shadow-sm flex items-center gap-1.5">
-          <i class="fa-solid fa-van-shuttle"></i> Travel
-        </button>
-        <button onclick="openServiceModal('train')" class="shrink-0 px-3.5 py-2 rounded-full bg-white border border-[#DCE6E0] text-[#2C4238] text-[11px] font-semibold flex items-center gap-1.5 hover:border-[#2D5A4C]">
-          <i class="fa-solid fa-train text-[#3B7A67]"></i> Kereta
-        </button>
-        <button onclick="openServiceModal('hotel')" class="shrink-0 px-3.5 py-2 rounded-full bg-white border border-[#DCE6E0] text-[#2C4238] text-[11px] font-semibold flex items-center gap-1.5 hover:border-[#2D5A4C]">
-          <i class="fa-solid fa-hotel text-[#3B7A67]"></i> Stay
-        </button>
-        <button onclick="openServiceModal('souvenir')" class="shrink-0 px-3.5 py-2 rounded-full bg-white border border-[#DCE6E0] text-[#2C4238] text-[11px] font-semibold flex items-center gap-1.5 hover:border-[#2D5A4C]">
-          <i class="fa-solid fa-gift text-[#3B7A67]"></i> Oleh-Oleh
-        </button>
-        <button onclick="openServiceModal('car')" class="shrink-0 px-3.5 py-2 rounded-full bg-white border border-[#DCE6E0] text-[#2C4238] text-[11px] font-semibold flex items-center gap-1.5 hover:border-[#2D5A4C]">
-          <i class="fa-solid fa-car text-[#3B7A67]"></i> Sewa Mobil
-        </button>
-      </section>
+      <!-- Pilihan Destinasi Cepat (Chips) -->
+      <section class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="quickDestChips"></section>
 
-      <!-- Inspiring Destinations -->
-      <section class="space-y-2.5">
-        <div class="flex justify-between items-center">
-          <h2 class="font-bold text-xs text-[#1A2E26]">Inspiring Destinations</h2>
-          <span class="text-[10px] text-[#2D5A4C] font-bold">Pilih Kota</span>
-        </div>
-        <div id="visualDestCards" class="flex gap-3 overflow-x-auto no-scrollbar pb-1"></div>
-      </section>
-
-      <!-- Map & Route Optimization Card -->
+      <!-- Peta & Metrik Ringkas (Jarak & Estimasi Tarif Awal) -->
       <section class="bg-white rounded-3xl p-3.5 shadow-[0_8px_30px_rgb(45,90,76,0.05)] border border-[#E3EDE7] space-y-3">
         <div class="flex justify-between items-center">
           <div class="flex items-center gap-2">
             <span class="w-6 h-6 rounded-full bg-[#E3EDE7] text-[#2D5A4C] flex items-center justify-center text-xs">
-              <i class="fa-solid fa-route"></i>
+              <i class="fa-solid fa-map-location-dot"></i>
             </span>
             <div>
-              <h3 id="activeDestTitle" class="font-bold text-xs text-[#1A2E26] leading-tight">Rute Perjalanan</h3>
-              <p class="text-[10px] text-[#7A9186]">Klik peta untuk set titik tujuan langsung</p>
+              <h3 id="activeDestTitle" class="font-bold text-xs text-[#1A2E26] leading-tight">Peta & Jarak Tujuan</h3>
+              <p class="text-[10px] text-[#7A9186]">Klik titik di peta untuk pilih lokasi</p>
             </div>
           </div>
-          <span class="text-[9px] font-extrabold bg-[#E3EDE7] text-[#2D5A4C] px-2.5 py-1 rounded-full">Route Ready</span>
+          <span class="text-[9px] font-extrabold bg-[#E3EDE7] text-[#2D5A4C] px-2.5 py-1 rounded-full">Rute Aktif</span>
         </div>
 
         <div id="map"></div>
 
-        <!-- 3 Metrik Utama -->
-        <div class="grid grid-cols-3 gap-2 pt-1 text-center divide-x divide-[#EDF3EF]">
+        <div class="grid grid-cols-2 gap-2 pt-1 text-center divide-x divide-[#EDF3EF]">
           <div>
-            <span class="text-[9px] text-[#7A9186] block">Distance</span>
+            <span class="text-[9px] text-[#7A9186] block">Perkiraan Jarak</span>
             <span id="metricDistance" class="font-extrabold text-xs text-[#1A2E26]">- km</span>
           </div>
           <div>
-            <span class="text-[9px] text-[#7A9186] block">Start From</span>
-            <span id="metricCost" class="font-extrabold text-xs text-[#2D5A4C]">Rp 25.000</span>
-          </div>
-          <div>
-            <span class="text-[9px] text-[#7A9186] block">Est. Time</span>
-            <span id="metricDuration" class="font-extrabold text-xs text-[#1A2E26]">~45 mnt</span>
+            <span class="text-[9px] text-[#7A9186] block">Tarif Mulai Dari</span>
+            <span id="metricCost" class="font-extrabold text-xs text-[#2D5A4C]">-</span>
           </div>
         </div>
       </section>
 
-      <!-- Sub-Tab Menu (How to Get There | Transport | Stay | Things to Do) -->
-      <section class="space-y-3">
-        <div class="flex gap-4 border-b border-[#DCE6E0] text-xs font-bold overflow-x-auto no-scrollbar">
-          <button onclick="switchSubTab('guide')" id="sub-guide" class="pb-2 text-[#2D5A4C] border-b-2 border-[#2D5A4C] shrink-0">How to Get There</button>
-          <button onclick="switchSubTab('transport')" id="sub-transport" class="pb-2 text-[#7A9186] hover:text-[#2D5A4C] shrink-0">Transport</button>
-          <button onclick="switchSubTab('stay')" id="sub-stay" class="pb-2 text-[#7A9186] hover:text-[#2D5A4C] shrink-0">Stay</button>
-          <button onclick="switchSubTab('things')" id="sub-things" class="pb-2 text-[#7A9186] hover:text-[#2D5A4C] shrink-0">Things to Do</button>
-        </div>
+      <!-- PANDUAN LANGKAH MENUJU TUJUAN (How to Get There) -->
+      <section class="space-y-2">
+        <h2 class="font-bold text-xs text-[#1A2E26] uppercase tracking-wide">🧭 Panduan Rute Perjalanan (Step-by-Step)</h2>
+        <div id="guideStepsBox" class="bg-white border border-[#E3EDE7] rounded-3xl p-4 space-y-3 text-xs shadow-sm"></div>
+      </section>
 
-        <!-- Konten Sub-Tab -->
-        <div id="content-guide" class="bg-white rounded-3xl p-4 border border-[#E3EDE7] shadow-sm space-y-3 text-xs"></div>
-        <div id="content-transport" class="hidden space-y-2.5"></div>
-        <div id="content-stay" class="hidden space-y-2.5"></div>
-        <div id="content-things" class="hidden space-y-2.5"></div>
+      <!-- PILIHAN MODA TRANSPORTASI & TARIF -->
+      <section class="space-y-2">
+        <div class="flex justify-between items-center">
+          <h2 class="font-bold text-xs text-[#1A2E26] uppercase tracking-wide">🚐 Kendaraan, Tarif & Durasi</h2>
+          <span class="text-[10px] text-[#2D5A4C] font-bold">Siap Jalan</span>
+        </div>
+        <div id="transportList" class="space-y-2.5"></div>
+      </section>
+
+      <!-- MENU TAMBAHAN (Booking Partner - Hotel, Mobil, Oleh-Oleh) -->
+      <section class="space-y-2 pt-2">
+        <h2 class="font-bold text-xs text-[#7A9186] uppercase tracking-wide">💼 Layanan Mitra & Booking (Segera Hadir)</h2>
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="openPartnerModal('hotel')" class="bg-white border border-[#E3EDE7] p-3 rounded-2xl text-center hover:border-[#2D5A4C] transition">
+            <i class="fa-solid fa-hotel text-[#2D5A4C] text-sm mb-1 block"></i>
+            <span class="text-[10px] font-bold text-[#1A2E26]">Hotel</span>
+          </button>
+          <button onclick="openPartnerModal('car')" class="bg-white border border-[#E3EDE7] p-3 rounded-2xl text-center hover:border-[#2D5A4C] transition">
+            <i class="fa-solid fa-car text-[#2D5A4C] text-sm mb-1 block"></i>
+            <span class="text-[10px] font-bold text-[#1A2E26]">Sewa Mobil</span>
+          </button>
+          <button onclick="openPartnerModal('souvenir')" class="bg-white border border-[#E3EDE7] p-3 rounded-2xl text-center hover:border-[#2D5A4C] transition">
+            <i class="fa-solid fa-gift text-[#2D5A4C] text-sm mb-1 block"></i>
+            <span class="text-[10px] font-bold text-[#1A2E26]">Oleh-Oleh</span>
+          </button>
+        </div>
       </section>
 
     </main>
 
     <!-- ========================================== -->
-    <!-- TAB 2: TRIP BUDGET (Estimasi Biaya)        -->
-    <!-- ========================================== -->
-    <main id="tab-budget" class="hidden flex-1 px-5 space-y-4 pt-2">
-      <div class="bg-[#2D5A4C] text-white p-5 rounded-3xl shadow-lg relative overflow-hidden">
-        <div class="flex justify-between items-start relative z-10">
-          <div>
-            <span class="text-[10px] text-[#A8C9BE] uppercase font-bold tracking-wider">Trip Budget Calculator</span>
-            <h2 id="totalBudgetText" class="text-2xl font-extrabold text-white mt-1">Rp 0</h2>
-          </div>
-          <button onclick="clearPlan()" class="text-[10px] bg-white/15 hover:bg-white/25 text-white px-3 py-1.5 rounded-full font-bold">Reset</button>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-3 mt-4 pt-3.5 border-t border-white/15 text-xs relative z-10">
-          <div>
-            <span class="text-[10px] text-[#C5DDD5] block">Travellers</span>
-            <div class="flex items-center gap-2.5 mt-1">
-              <button onclick="changeMultiplier('pax', -1)" class="w-6 h-6 rounded-full bg-white/15 text-white font-bold">-</button>
-              <span id="paxCount" class="font-bold text-xs">1 Orang</span>
-              <button onclick="changeMultiplier('pax', 1)" class="w-6 h-6 rounded-full bg-white/15 text-white font-bold">+</button>
-            </div>
-          </div>
-          <div>
-            <span class="text-[10px] text-[#C5DDD5] block">Duration</span>
-            <div class="flex items-center gap-2.5 mt-1">
-              <button onclick="changeMultiplier('nights', -1)" class="w-6 h-6 rounded-full bg-white/15 text-white font-bold">-</button>
-              <span id="nightsCount" class="font-bold text-xs">1 Hari</span>
-              <button onclick="changeMultiplier('nights', 1)" class="w-6 h-6 rounded-full bg-white/15 text-white font-bold">+</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <h3 class="font-bold text-xs text-[#1A2E26]">Rincian Item & Pemesanan</h3>
-        <div id="planItemsContainer" class="space-y-2 text-xs"></div>
-      </div>
-
-      <button onclick="savePlanToAccount()" class="w-full py-3 bg-[#2D5A4C] hover:bg-[#1E4035] text-white font-bold text-xs rounded-full shadow-md flex items-center justify-center gap-2">
-        <i class="fa-solid fa-cloud-arrow-up"></i> Simpan Rencana & Itinerary
-      </button>
-    </main>
-
-    <!-- ========================================== -->
-    <!-- TAB 3: MY ITINERARY (Timeline Vertikal)    -->
-    <!-- ========================================== -->
-    <main id="tab-itinerary" class="hidden flex-1 px-5 space-y-4 pt-2">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="font-serif-title text-xl font-bold text-[#1A2E26]">Your Itinerary</h2>
-          <p class="text-[11px] text-[#7A9186]">Susunan jadwal perjalanan harianmu</p>
-        </div>
-        <span class="bg-[#E3EDE7] text-[#2D5A4C] text-[10px] font-bold px-3 py-1 rounded-full">Timeline</span>
-      </div>
-
-      <!-- Form Tambah Jadwal -->
-      <div class="bg-white border border-[#E3EDE7] p-3.5 rounded-3xl shadow-sm space-y-2.5 text-xs">
-        <div class="grid grid-cols-2 gap-2">
-          <select id="itinDay" class="p-2 bg-[#F6F9F7] border border-[#DCE6E0] rounded-xl font-bold text-[#1A2E26] text-[11px]">
-            <option value="Day 1">Day 1</option>
-            <option value="Day 2">Day 2</option>
-            <option value="Day 3">Day 3</option>
-          </select>
-          <input type="time" id="itinTime" value="09:00" class="p-2 bg-[#F6F9F7] border border-[#DCE6E0] rounded-xl font-bold text-[#1A2E26] text-[11px]">
-        </div>
-        <div class="flex gap-2">
-          <input type="text" id="itinActivity" placeholder="Tambah aktivitas (misal: Ngopi di Kafe)..." class="flex-1 px-3 py-2 bg-[#F6F9F7] border border-[#DCE6E0] rounded-xl text-[11px]">
-          <button onclick="addItineraryItem()" class="bg-[#2D5A4C] text-white font-bold px-4 rounded-xl text-[11px]">+ Add</button>
-        </div>
-      </div>
-
-      <!-- Vertical Timeline List -->
-      <div id="itineraryListContainer" class="space-y-3 pl-2"></div>
-    </main>
-
-    <!-- ========================================== -->
-    <!-- TAB 4: PROFILE / AKUN (ALA REFERENSI BARU) -->
+    <!-- TAB 2: PROFILE / AKUN                      -->
     <!-- ========================================== -->
     <main id="tab-account" class="hidden flex-1 flex flex-col">
-      
-      <!-- Header Forest Green Melengkung Ala Referensi -->
       <div class="bg-[#2D5A4C] text-white pt-6 pb-10 px-5 text-center relative">
         <div class="flex justify-between items-center mb-4">
-          <button onclick="switchTab('explore')" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white text-xs">
+          <button onclick="switchTab('explore')" class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-white text-xs">
             <i class="fa-solid fa-arrow-left"></i>
           </button>
           <h2 class="font-bold text-sm tracking-wide">Profile</h2>
           <div class="w-8"></div>
         </div>
 
-        <!-- Avatar & Info User -->
         <div class="relative w-20 h-20 mx-auto mb-3">
           <div id="profileAvatarBox" class="w-full h-full rounded-full bg-[#E3EDE7] text-[#2D5A4C] border-4 border-white/30 flex items-center justify-center text-2xl font-extrabold shadow-lg overflow-hidden">
             <i class="fa-solid fa-user"></i>
           </div>
-          <span class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-emerald-400 border-2 border-[#2D5A4C] flex items-center justify-center text-[10px] text-[#1A2E26]">
-            <i class="fa-solid fa-check"></i>
-          </span>
         </div>
 
         <h3 id="profileName" class="font-bold text-base text-white">Traveler Tamu</h3>
-        <p id="profileEmail" class="text-xs text-[#C5DDD5] mt-0.5">Silakan masuk untuk sinkronisasi cloud</p>
+        <p id="profileEmail" class="text-xs text-[#C5DDD5] mt-0.5">Silakan masuk untuk menyimpan riwayat rute</p>
       </div>
 
-      <!-- Panel Putih Melengkung ke Atas (Settings List Ala Gambar Referensi) -->
-      <div class="flex-1 bg-white rounded-t-[2rem] -mt-6 px-5 pt-6 pb-6 space-y-5 shadow-inner">
-        
-        <!-- Tombol Login / Logout Cepat -->
+      <div class="flex-1 bg-white rounded-t-[2rem] -mt-6 px-5 pt-6 pb-6 space-y-4 shadow-inner">
         <div id="loggedOutActionBox">
-          <button onclick="openAuthModal()" class="w-full py-3 bg-[#2D5A4C] hover:bg-[#1E4035] text-white font-bold text-xs rounded-2xl shadow-md flex items-center justify-center gap-2">
-            <i class="fa-solid fa-right-to-bracket"></i> Masuk atau Daftar Akun jelaja.com
+          <button onclick="openAuthModal()" class="w-full py-3 bg-[#2D5A4C] text-white font-bold text-xs rounded-2xl shadow-md flex items-center justify-center gap-2">
+            <i class="fa-solid fa-right-to-bracket"></i> Masuk Akun jelaja.com
           </button>
         </div>
-
-        <!-- Group 1: Account Settings -->
-        <div class="space-y-2">
-          <p class="text-[11px] font-bold text-[#7A9186] px-1">Account Settings</p>
-          <div class="bg-[#F8FAF9] border border-[#E8EFEA] rounded-2xl divide-y divide-[#E8EFEA]">
-            <button onclick="openAuthModal()" class="w-full p-3.5 flex items-center justify-between text-left hover:bg-[#F0F5F2] transition rounded-t-2xl">
-              <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-full bg-white text-[#2D5A4C] flex items-center justify-center shadow-xs text-xs"><i class="fa-regular fa-id-badge"></i></span>
-                <span class="font-semibold text-xs text-[#1A2E26]">Account Settings</span>
-              </div>
-              <i class="fa-solid fa-chevron-right text-[10px] text-[#8CA197]"></i>
-            </button>
-            <button onclick="switchTab('budget')" class="w-full p-3.5 flex items-center justify-between text-left hover:bg-[#F0F5F2] transition">
-              <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-full bg-white text-[#2D5A4C] flex items-center justify-center shadow-xs text-xs"><i class="fa-solid fa-shield-halved"></i></span>
-                <span class="font-semibold text-xs text-[#1A2E26]">Saved Trip Budget & Plans</span>
-              </div>
-              <i class="fa-solid fa-chevron-right text-[10px] text-[#8CA197]"></i>
-            </button>
-            <button onclick="switchTab('itinerary')" class="w-full p-3.5 flex items-center justify-between text-left hover:bg-[#F0F5F2] transition rounded-b-2xl">
-              <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-full bg-white text-[#2D5A4C] flex items-center justify-center shadow-xs text-xs"><i class="fa-regular fa-bell"></i></span>
-                <span class="font-semibold text-xs text-[#1A2E26]">Itinerary & Schedule Reminders</span>
-              </div>
-              <i class="fa-solid fa-chevron-right text-[10px] text-[#8CA197]"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Group 2: My Trips (Riwayat Tersimpan dari Firebase) -->
-        <div class="space-y-2">
-          <p class="text-[11px] font-bold text-[#7A9186] px-1">My Saved Trips</p>
-          <div id="savedPlansList" class="space-y-2 text-xs text-[#7A9186]">
-            <div class="bg-[#F8FAF9] border border-[#E8EFEA] rounded-2xl p-3.5 text-center text-[11px]">
-              Belum ada perjalanan tersimpan di akun ini.
-            </div>
-          </div>
-        </div>
-
-        <!-- Group 3: Other & Logout -->
-        <div class="space-y-2">
-          <p class="text-[11px] font-bold text-[#7A9186] px-1">Other</p>
-          <div class="bg-[#F8FAF9] border border-[#E8EFEA] rounded-2xl divide-y divide-[#E8EFEA]">
-            <button onclick="alert('jelaja.com v4.0 — Aplikasi Travel, Transit, Budget & Itinerary Planner.')" class="w-full p-3.5 flex items-center justify-between text-left hover:bg-[#F0F5F2] transition rounded-t-2xl">
-              <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-full bg-white text-[#2D5A4C] flex items-center justify-center shadow-xs text-xs"><i class="fa-regular fa-circle-question"></i></span>
-                <span class="font-semibold text-xs text-[#1A2E26]">FAQ & Bantuan</span>
-              </div>
-              <i class="fa-solid fa-chevron-right text-[10px] text-[#8CA197]"></i>
-            </button>
-            <button id="btnLogoutRow" onclick="logoutUser()" class="hidden w-full p-3.5 flex items-center justify-between text-left hover:bg-red-50 transition rounded-b-2xl text-red-600">
-              <div class="flex items-center gap-3">
-                <span class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs"><i class="fa-solid fa-arrow-right-from-bracket"></i></span>
-                <span class="font-bold text-xs">Keluar dari Akun</span>
-              </div>
-              <i class="fa-solid fa-chevron-right text-[10px]"></i>
-            </button>
-          </div>
-        </div>
-
+        <button id="btnLogoutRow" onclick="logoutUser()" class="hidden w-full py-3 bg-red-50 text-red-600 font-bold text-xs rounded-2xl shadow-xs">
+          Keluar dari Akun
+        </button>
       </div>
     </main>
 
-    <!-- MODAL LAYANAN -->
-    <div id="serviceModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-3">
-      <div class="bg-white w-full max-w-md rounded-3xl p-5 max-h-[85vh] overflow-y-auto shadow-2xl space-y-3.5">
-        <div class="flex justify-between items-center border-b border-[#E8EFEA] pb-3">
-          <h3 id="serviceModalTitle" class="font-bold text-sm text-[#1A2E26]">Layanan</h3>
-          <button onclick="closeServiceModal()" class="w-7 h-7 rounded-full bg-[#F0F5F2] text-[#2D5A4C] font-bold text-xs">✕</button>
+    <!-- MODAL MITRA / PARTNER BOOKING -->
+    <div id="partnerModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+      <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-3 text-center">
+        <div class="w-12 h-12 bg-[#E3EDE7] text-[#2D5A4C] rounded-2xl mx-auto flex items-center justify-center text-lg">
+          <i class="fa-solid fa-handshake"></i>
         </div>
-        <div id="serviceModalList" class="space-y-2.5 text-xs"></div>
+        <h3 class="font-bold text-sm text-[#1A2E26]">Kerjasama Vendor / Mitra</h3>
+        <p class="text-xs text-[#5C7268] leading-relaxed">Fitur pemesanan langsung akan segera diaktifkan setelah kerja sama resmi dengan perusahaan terkait selesai.</p>
+        <button onclick="closePartnerModal()" class="w-full py-2.5 bg-[#2D5A4C] text-white font-bold text-xs rounded-full mt-2">Mengerti</button>
       </div>
     </div>
 
-    <!-- MODAL AUTH (DILENGKAPI GOOGLE SIGN-IN & EMAIL) -->
+    <!-- MODAL AUTH -->
     <div id="authModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
       <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-4">
         <div class="flex justify-between items-center">
-          <h3 id="authModalTitle" class="font-bold text-base text-[#1A2E26]">Masuk Akun jelaja.com</h3>
+          <h3 class="font-bold text-base text-[#1A2E26]">Masuk jelaja.com</h3>
           <button onclick="closeAuthModal()" class="w-7 h-7 rounded-full bg-[#F0F5F2] text-[#2D5A4C] font-bold text-xs">✕</button>
         </div>
-
-        <!-- Tombol Login Google (1-Klik) -->
-        <button onclick="loginWithGoogle()" type="button" class="w-full py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-full shadow-xs flex items-center justify-center gap-2 transition">
+        <button onclick="loginWithGoogle()" type="button" class="w-full py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-full shadow-xs flex items-center justify-center gap-2">
           <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4 h-4">
           <span>Lanjutkan dengan Google</span>
         </button>
-
-        <div class="relative flex py-1 items-center">
-          <div class="grow border-t border-slate-200"></div>
-          <span class="shrink mx-3 text-[10px] text-slate-400">atau gunakan email</span>
-          <div class="grow border-t border-slate-200"></div>
-        </div>
-
-        <form id="authForm" class="space-y-3 text-xs">
-          <div id="nameFieldBox" class="hidden">
-            <label class="font-bold text-[10px] text-[#4A6358]">Nama Lengkap</label>
-            <input type="text" id="authName" class="w-full p-2.5 bg-[#F6F9F7] border border-[#DCE6E0] rounded-2xl mt-1" placeholder="Nama kamu">
-          </div>
-          <div>
-            <label class="font-bold text-[10px] text-[#4A6358]">Email</label>
-            <input type="email" id="authEmail" required class="w-full p-2.5 bg-[#F6F9F7] border border-[#DCE6E0] rounded-2xl mt-1" placeholder="nama@email.com">
-          </div>
-          <div>
-            <label class="font-bold text-[10px] text-[#4A6358]">Password (Min. 6 Karakter)</label>
-            <input type="password" id="authPassword" required class="w-full p-2.5 bg-[#F6F9F7] border border-[#DCE6E0] rounded-2xl mt-1" placeholder="••••••">
-          </div>
-          <button type="submit" id="authSubmitBtn" class="w-full py-3 bg-[#2D5A4C] hover:bg-[#1E4035] text-white font-bold rounded-full shadow-md">Masuk</button>
-        </form>
-
-        <div class="text-center text-[11px] pt-1">
-          <span id="authSwitchText" class="text-[#7A9186]">Belum punya akun?</span>
-          <button onclick="toggleAuthMode()" id="authSwitchBtn" class="font-bold text-[#2D5A4C] ml-1">Daftar Sekarang</button>
-        </div>
       </div>
     </div>
 
-    <!-- FLOATING GLASS BOTTOM NAVIGATION BAR (FOREST GREEN THEME) -->
+    <!-- FLOATING BOTTOM NAVIGATION BAR -->
     <div class="fixed bottom-4 left-0 right-0 max-w-md mx-auto px-5 z-40">
-      <nav class="bg-[#1A2E26]/95 backdrop-blur-md text-white rounded-full py-2.5 px-4 flex justify-around items-center shadow-2xl border border-white/10 text-[10px]">
-        <button onclick="switchTab('explore')" id="nav-explore" class="flex flex-col items-center text-[#84D2B9] font-bold px-2">
-          <i class="fa-solid fa-compass text-sm mb-0.5"></i>
-          <span>Explore</span>
+      <nav class="bg-[#1A2E26]/95 backdrop-blur-md text-white rounded-full py-2.5 px-6 flex justify-around items-center shadow-2xl border border-white/10 text-[10px]">
+        <button onclick="switchTab('explore')" id="nav-explore" class="flex flex-col items-center text-[#84D2B9] font-bold">
+          <i class="fa-solid fa-route text-sm mb-0.5"></i>
+          <span>Cari Rute</span>
         </button>
-        <button onclick="switchTab('budget')" id="nav-budget" class="flex flex-col items-center text-[#94ABA0] hover:text-white font-medium px-2 relative">
-          <i class="fa-solid fa-wallet text-sm mb-0.5"></i>
-          <span>Budget</span>
-          <span id="planBadge" class="hidden -top-1 right-0 absolute bg-[#2D5A4C] text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center border border-white/30">0</span>
-        </button>
-        <button onclick="switchTab('itinerary')" id="nav-itinerary" class="flex flex-col items-center text-[#94ABA0] hover:text-white font-medium px-2 relative">
-          <i class="fa-solid fa-calendar-check text-sm mb-0.5"></i>
-          <span>Itinerary</span>
-          <span id="itinBadge" class="hidden -top-1 right-0 absolute bg-emerald-500 text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">0</span>
-        </button>
-        <button onclick="switchTab('account')" id="nav-account" class="flex flex-col items-center text-[#94ABA0] hover:text-white font-medium px-2">
+        <button onclick="switchTab('account')" id="nav-account" class="flex flex-col items-center text-[#94ABA0] hover:text-white font-medium">
           <i class="fa-solid fa-user text-sm mb-0.5"></i>
           <span>Profile</span>
         </button>
@@ -428,10 +236,9 @@
   <!-- Firebase & Leaflet Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // TODO: TEMPEL FIREBASE CONFIG LO DI SINI
     const firebaseConfig = {
   apiKey: "AIzaSyCG1I6jOsyO9nGRJcplpZgSiq0wQ383PJ4",
   authDomain: "jejakkota.firebaseapp.com",
@@ -450,75 +257,13 @@
     const formatRp = (num) => "Rp " + Number(num).toLocaleString('id-ID');
 
     let allDestinations = [];
-    let currentDest = null;
     let map, markersLayer, routeLineLayer;
-    let planItems = [];
-    let itineraryItems = [
-      { id: 1, day: "Day 1", time: "08:30", activity: "Berangkat menuju lokasi destinasi utama" },
-      { id: 2, day: "Day 1", time: "12:30", activity: "Makan siang & eksplorasi kafe lokal" }
-    ];
-    let pax = 1, nights = 1;
-    let isRegisterMode = false;
-    let currentUser = null;
-
-    const fallbackImages = [
-      "https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80"
-    ];
-
-    const bookingCatalog = {
-      travel: {
-        title: "🚐 Transport • Travel & Bus",
-        items: [
-          { id: "srv_trv1", name: "Nice Trans Executive (Medan ↔ Parapat)", info: "HiAce • Berangkat tiap 2 jam", price: 120000, unit: "org", cat: "transport" },
-          { id: "srv_trv2", name: "Bus Sinabung Jaya (Medan ↔ Berastagi)", info: "AC / Non-AC", price: 25000, unit: "org", cat: "transport" }
-        ]
-      },
-      train: {
-        title: "🚆 Transport • Kereta Api",
-        items: [
-          { id: "srv_trn1", name: "KA Bandara Railink (Kualanamu ↔ Medan)", info: "Eksekutif • 35 menit", price: 40000, unit: "org", cat: "transport" },
-          { id: "srv_trn2", name: "KA Siantar Ekspres (Medan ↔ Siantar)", info: "Ekonomi AC", price: 22000, unit: "org", cat: "transport" }
-        ]
-      },
-      hotel: {
-        title: "🏨 Stay • Hotel & Resort",
-        items: [
-          { id: "srv_htl1", name: "Grand City Hall Hotel Medan (⭐⭐⭐⭐⭐)", info: "Pusat Kota Medan", price: 950000, unit: "malam", cat: "hotel" },
-          { id: "srv_htl2", name: "Mikie Holiday Resort Berastagi (⭐⭐⭐⭐)", info: "Kawasan sejuk", price: 850000, unit: "malam", cat: "hotel" }
-        ]
-      },
-      souvenir: {
-        title: "🎁 Toko Oleh-Oleh Khas",
-        items: [
-          { id: "srv_sou1", name: "Bika Ambon Zulaikha Asli Medan", info: "Kotak besar • Fresh", price: 75000, unit: "kotak", cat: "activity" },
-          { id: "srv_sou2", name: "Pancake Durian Medan (Box 21 Pcs)", info: "Daging durian asli", price: 90000, unit: "box", cat: "activity" }
-        ]
-      },
-      car: {
-        title: "🚗 Sewa Mobil + Supir",
-        items: [
-          { id: "srv_car1", name: "Toyota Avanza + Supir (12 Jam)", info: "Full day tour", price: 650000, unit: "hari", cat: "rental" }
-        ]
-      }
-    };
 
     function initMap() {
-      map = L.map('map', { zoomControl: false }).setView([3.5912, 98.6773], 13);
+      map = L.map('map', { zoomControl: false }).setView([3.5912, 98.6773], 12);
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap' }).addTo(map);
       markersLayer = L.layerGroup().addTo(map);
       routeLineLayer = L.layerGroup().addTo(map);
-
-      map.on('click', (e) => {
-        const lat = e.latlng.lat.toFixed(4);
-        const lng = e.latlng.lng.toFixed(4);
-        document.getElementById('destinationInput').value = `Koordinat (${lat}, ${lng})`;
-        L.popup()
-          .setLatLng(e.latlng)
-          .setContent(`<div class="text-xs font-bold">📍 Tujuan: ${lat}, ${lng}</div>`)
-          .openOn(map);
-      });
     }
 
     async function loadDestinations() {
@@ -533,39 +278,21 @@
         
         const destList = document.getElementById('destSuggestions');
         const originList = document.getElementById('originSuggestions');
-        const visualCards = document.getElementById('visualDestCards');
+        const chipsBox = document.getElementById('quickDestChips');
         
-        const defaultOrigins = ["Medan", "Bandara Kualanamu (KNO)", "Berastagi", "Parapat", "Bukittinggi"];
-        let originSet = new Set(defaultOrigins);
         destList.innerHTML = "";
-        visualCards.innerHTML = "";
+        chipsBox.innerHTML = "";
 
-        let index = 0;
         snap.forEach(doc => {
           const d = { id: doc.id, ...doc.data() };
           allDestinations.push(d);
           destList.innerHTML += `<option value="${d.name}">`;
-          originSet.add(d.name);
-          if (d.short_label) originSet.add(d.short_label);
-
-          const imgUrl = d.image || fallbackImages[index % fallbackImages.length];
-          index++;
-
-          visualCards.innerHTML += `
-            <div onclick="selectDestinationByObj('${d.id}')" class="shrink-0 w-32 h-40 rounded-3xl overflow-hidden relative shadow-md cursor-pointer group">
-              <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-              <div class="absolute inset-0 bg-gradient-to-t from-[#1A2E26]/90 via-[#1A2E26]/20 to-transparent"></div>
-              <div class="absolute top-2.5 right-2.5 bg-white/20 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
-                ★ 4.9
-              </div>
-              <div class="absolute bottom-3 left-3 right-3 text-white">
-                <p class="font-bold text-xs leading-tight line-clamp-1">${d.short_label || d.name}</p>
-                <p class="text-[9px] text-[#C5DDD5] mt-0.5">${d.badge || 'Explore'}</p>
-              </div>
-            </div>`;
+          
+          chipsBox.innerHTML += `
+            <button onclick="selectDestinationByObj('${d.id}')" class="shrink-0 px-3 py-1.5 rounded-full bg-white border border-[#DCE6E0] hover:bg-[#2D5A4C] hover:text-white text-[#2D5A4C] font-bold text-[11px] shadow-xs transition">
+              📍 ${d.short_label || d.name}
+            </button>`;
         });
-
-        originList.innerHTML = Array.from(originSet).map(loc => `<option value="${loc}">`).join('');
 
         if (allDestinations.length > 0) {
           document.getElementById('destinationInput').value = allDestinations[0].name;
@@ -577,33 +304,8 @@
     window.handleDestinationSearch = () => {
       const keyword = document.getElementById('destinationInput').value.trim().toLowerCase();
       if (!keyword) return;
-
-      const found = allDestinations.find(d => 
-        d.name.toLowerCase().includes(keyword) || 
-        (d.badge && d.badge.toLowerCase().includes(keyword)) ||
-        (d.short_label && d.short_label.toLowerCase().includes(keyword))
-      );
-
-      if (found) {
-        renderDestination(found);
-      } else {
-        const originText = document.getElementById('originInput').value || "Medan";
-        const customDest = {
-          name: document.getElementById('destinationInput').value,
-          lat: 3.1234, lng: 98.7654,
-          badge: "Custom Route",
-          guide_steps: [
-            `Berangkat dari titik asal (${originText}) menuju jalur utama antar kota.`,
-            `Ikuti rute jalan raya menuju ${document.getElementById('destinationInput').value}.`,
-            `Tiba di titik lokasi tujuan & lanjutkan eksplorasi sekitar.`
-          ],
-          routes: [{ tag: "CHARTER / TRAVEL", title: `Travel Khusus (${originText} ➔ Tujuan)`, total_duration: 150, total_price: 150000 }],
-          cafes: [{ name: "Kafe & Resto Lokal", cat: "Kuliner", price: 30000, desc: "Tempat nongkrong terdekat di area ini." }],
-          souvenirs: [{ name: "Pusat Toko Oleh-Oleh", desc: "Sentra oleh-oleh dan cinderamata lokal." }],
-          hotels: [{ name: "Penginapan / Hotel Lokal", stars: "⭐⭐⭐", price: 450000, note: "Kamar nyaman sekitar lokasi" }]
-        };
-        renderDestination(customDest);
-      }
+      const found = allDestinations.find(d => d.name.toLowerCase().includes(keyword) || (d.short_label && d.short_label.toLowerCase().includes(keyword)));
+      if (found) renderDestination(found);
     };
 
     window.selectDestinationByObj = (id) => {
@@ -618,438 +320,101 @@
       const R = 6371;
       const dLat = (lat2 - lat1) * Math.PI / 180;
       const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return (R * c).toFixed(1);
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+      return (R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)))).toFixed(1);
     }
 
     function renderDestination(data) {
-      currentDest = data;
       document.getElementById('activeDestTitle').innerText = data.name;
-
-      const originText = document.getElementById('originInput').value || "Medan";
       const originLat = 3.5912, originLng = 98.6773;
-      const destLat = data.lat || 3.5000;
-      const destLng = data.lng || 98.5000;
+      const distanceKm = calculateDistance(originLat, originLng, data.lat || 3.5, data.lng || 98.5);
       
-      const distanceKm = calculateDistance(originLat, originLng, destLat, destLng);
       document.getElementById('metricDistance').innerText = `${distanceKm} km`;
-      
-      const firstRoute = (data.routes && data.routes[0]) || { total_price: 35000, total_duration: 60 };
+      const firstRoute = (data.routes && data.routes[0]) || { total_price: 25000 };
       document.getElementById('metricCost').innerText = formatRp(firstRoute.total_price);
-      document.getElementById('metricDuration').innerText = `~${firstRoute.total_duration} mnt`;
 
       if (data.lat && data.lng) {
-        map.setView([data.lat, data.lng], 13);
+        map.setView([data.lat, data.lng], 12);
         markersLayer.clearLayers();
         routeLineLayer.clearLayers();
-
-        L.circleMarker([originLat, originLng], { radius: 6, color: '#10B981', fillColor: '#10B981', fillOpacity: 1 })
-          .addTo(markersLayer).bindPopup(`<b>Asal: ${originText}</b>`);
-        
-        L.circleMarker([data.lat, data.lng], { radius: 8, color: '#2D5A4C', fillColor: '#2D5A4C', fillOpacity: 1 })
-          .addTo(markersLayer).bindPopup(`<b>🎯 ${data.name}</b>`);
-
+        L.circleMarker([originLat, originLng], { radius: 6, color: '#10B981', fillColor: '#10B981', fillOpacity: 1 }).addTo(markersLayer);
+        L.circleMarker([data.lat, data.lng], { radius: 8, color: '#2D5A4C', fillColor: '#2D5A4C', fillOpacity: 1 }).addTo(markersLayer);
         L.polyline([[originLat, originLng], [data.lat, data.lng]], { color: '#2D5A4C', weight: 3.5, dashArray: '6, 6' }).addTo(routeLineLayer);
       }
 
-      const steps = data.guide_steps || [
-        `Mulai perjalanan dari titik awal (${originText}) menuju terminal atau stasiun keberangkatan.`,
-        `Pilih moda transportasi menuju kawasan ${data.name} (Estimasi jarak ~${distanceKm} km).`,
-        `Setibanya di lokasi, gunakan transportasi lokal menuju titik utama.`
-      ];
-      document.getElementById('content-guide').innerHTML = steps.map((step, i) => `
+      // Render Panduan Rute
+      const steps = data.guide_steps || [`Bertolak dari titik asal menuju rute utama ke ${data.name}.`];
+      document.getElementById('guideStepsBox').innerHTML = steps.map((s, i) => `
         <div class="flex items-start gap-3">
           <span class="w-5 h-5 rounded-full bg-[#2D5A4C] text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">${i + 1}</span>
-          <p class="text-[#4A6358] leading-relaxed">${step}</p>
-        </div>
-      `).join('');
-
-      document.getElementById('content-transport').innerHTML = (data.routes || [
-        { tag: "REGULER", title: "Transportasi Umum / Bus Antar Kota", total_duration: 90, total_price: 35000 }
-      ]).map((r, idx) => `
-        <div class="bg-white border border-[#E3EDE7] rounded-3xl p-3.5 shadow-sm">
-          <div class="flex justify-between items-start">
-            <div>
-              <span class="text-[9px] font-bold bg-[#E3EDE7] text-[#2D5A4C] px-2.5 py-0.5 rounded-full">${r.tag}</span>
-              <h3 class="font-bold text-xs text-[#1A2E26] mt-1.5">${r.title}</h3>
-            </div>
-            <div class="text-right">
-              <div class="text-[11px] font-bold text-[#2D5A4C]">~${r.total_duration} mnt</div>
-              <div class="text-xs font-extrabold text-[#1A2E26]">${formatRp(r.total_price)}</div>
-            </div>
-          </div>
-          <div class="flex gap-2 mt-3">
-            <button onclick="addToPlan('trv_${idx}', '${r.title.replace(/'/g, "")}', 'transport', ${r.total_price})" class="flex-1 py-2 bg-[#2D5A4C] text-white font-bold text-[11px] rounded-full">
-              + Trip Budget
-            </button>
-            <button onclick="quickAddItinerary('Naik ${r.title.replace(/'/g, "")}')" class="px-3.5 py-2 bg-[#F0F5F2] text-[#2D5A4C] font-bold text-[11px] rounded-full">
-              + Jadwal
-            </button>
-          </div>
+          <p class="text-[#4A6358] leading-relaxed">${s}</p>
         </div>`).join('');
 
-      document.getElementById('content-stay').innerHTML = (data.hotels || [
-        { name: "Hotel Nyaman Sekitar", stars: "⭐⭐⭐", price: 500000, note: "Fasilitas lengkap" }
-      ]).map((h, idx) => `
-        <div class="bg-white border border-[#E3EDE7] rounded-3xl p-3.5 shadow-sm flex justify-between items-center gap-2">
+      // Render Transportasi & Tarif
+      document.getElementById('transportList').innerHTML = (data.routes || []).map(r => `
+        <div class="bg-white border border-[#E3EDE7] rounded-3xl p-3.5 shadow-sm flex justify-between items-center">
           <div>
-            <span class="text-[9px] bg-[#E3EDE7] text-[#2D5A4C] font-bold px-2 py-0.5 rounded-full">${h.stars}</span>
-            <h4 class="font-bold text-xs text-[#1A2E26] mt-1">${h.name}</h4>
-            <p class="text-[10px] text-[#7A9186]">${h.note} • ${formatRp(h.price)}/malam</p>
+            <span class="text-[9px] font-bold bg-[#E3EDE7] text-[#2D5A4C] px-2.5 py-0.5 rounded-full">${r.tag}</span>
+            <h3 class="font-bold text-xs text-[#1A2E26] mt-1">${r.title}</h3>
+            <p class="text-[10px] text-[#7A9186]">Estimasi durasi: ~${r.total_duration} menit</p>
           </div>
-          <div class="flex flex-col gap-1.5 shrink-0">
-            <button onclick="addToPlan('htl_${idx}', '${h.name.replace(/'/g, "")}', 'hotel', ${h.price})" class="bg-[#2D5A4C] text-white font-bold text-[10px] px-3 py-1.5 rounded-full">+ Budget</button>
-            <button onclick="quickAddItinerary('Check-in ${h.name.replace(/'/g, "")}')" class="bg-[#F0F5F2] text-[#2D5A4C] font-bold text-[10px] px-3 py-1 rounded-full">+ Jadwal</button>
-          </div>
-        </div>`).join('');
-
-      const cafes = (data.cafes || [{ name: "Kopi Kenangan / Cafe Lokal", cat: "Kafe & Kuliner", price: 25000, desc: "Tempat nongkrong nyaman." }]).map((c, idx) => `
-        <div class="bg-white border border-[#E3EDE7] rounded-3xl p-3.5 shadow-sm flex justify-between items-center gap-2">
-          <div>
-            <span class="text-[9px] bg-amber-50 text-amber-800 font-bold px-2.5 py-0.5 rounded-full">☕ ${c.cat}</span>
-            <h4 class="font-bold text-xs text-[#1A2E26] mt-1">${c.name}</h4>
-            <p class="text-[10px] text-[#7A9186]">${c.desc} • Est. ${formatRp(c.price)}</p>
-          </div>
-          <div class="flex flex-col gap-1.5 shrink-0">
-            <button onclick="addToPlan('cafe_${idx}', '${c.name.replace(/'/g, "")}', 'activity', ${c.price})" class="bg-[#2D5A4C] text-white font-bold text-[10px] px-3 py-1.5 rounded-full">+ Budget</button>
-            <button onclick="quickAddItinerary('Singgah di ${c.name.replace(/'/g, "")}')" class="bg-[#F0F5F2] text-[#2D5A4C] font-bold text-[10px] px-3 py-1 rounded-full">+ Jadwal</button>
+          <div class="text-right">
+            <span class="text-xs font-extrabold text-[#2D5A4C] block">${formatRp(r.total_price)}</span>
+            <span class="text-[9px] text-[#7A9186]">Tarif Resmi</span>
           </div>
         </div>`).join('');
-
-      const souvenirs = (data.souvenirs || [{ name: "Pusat Toko Oleh-Oleh Khas", desc: "Sentra cinderamata dan jajanan lokal." }]).map((s, idx) => `
-        <div class="bg-white border border-[#E3EDE7] rounded-3xl p-3.5 shadow-sm flex justify-between items-center gap-2">
-          <div>
-            <span class="text-[9px] bg-emerald-50 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full">🎁 Toko Oleh-Oleh</span>
-            <h4 class="font-bold text-xs text-[#1A2E26] mt-1">${s.name}</h4>
-            <p class="text-[10px] text-[#7A9186]">${s.desc}</p>
-          </div>
-          <div class="flex flex-col gap-1.5 shrink-0">
-            <button onclick="addToPlan('souv_${idx}', '${s.name.replace(/'/g, "")}', 'activity', 50000)" class="bg-[#2D5A4C] text-white font-bold text-[10px] px-3 py-1.5 rounded-full">+ Budget</button>
-            <button onclick="quickAddItinerary('Belanja di ${s.name.replace(/'/g, "")}')" class="bg-[#F0F5F2] text-[#2D5A4C] font-bold text-[10px] px-3 py-1 rounded-full">+ Jadwal</button>
-          </div>
-        </div>`).join('');
-
-      document.getElementById('content-things').innerHTML = cafes + souvenirs;
     }
 
-    window.switchSubTab = (sub) => {
-      ['guide', 'transport', 'stay', 'things'].forEach(s => {
-        document.getElementById(`content-${s}`).classList.toggle('hidden', s !== sub);
-        const btn = document.getElementById(`sub-${s}`);
-        btn.className = s === sub ? "pb-2 text-[#2D5A4C] border-b-2 border-[#2D5A4C] shrink-0" : "pb-2 text-[#7A9186] hover:text-[#2D5A4C] shrink-0";
+    window.seedSuperAppData = async () => {
+      await addDoc(collection(db, "destinations_v4"), {
+        short_label: "Berastagi",
+        name: "Berastagi & Bukit Gundaling (Karo)",
+        lat: 3.1852, lng: 98.5049,
+        guide_steps: [
+          "Menuju loket Bus Sinabung Jaya atau Sutra di Padang Bulan, Medan.",
+          "Naik bus umum jurusan Berastagi melintasi jalur pegunungan Sibolangit (± 2 jam).",
+          "Turun di pusat kota Berastagi / Tugu Perjuangan."
+        ],
+        routes: [{ tag: "BUS UMUM", title: "Bus Sinabung Jaya (Medan → Berastagi)", total_duration: 120, total_price: 25000 }]
       });
+      alert("Data rute berhasil dimuat!");
+      loadDestinations();
     };
 
-    // --- ITINERARY TIMELINE ---
-    window.addItineraryItem = () => {
-      const day = document.getElementById('itinDay').value;
-      const time = document.getElementById('itinTime').value;
-      const activity = document.getElementById('itinActivity').value.trim();
-      if (!activity) return;
-      itineraryItems.push({ id: Date.now(), day, time, activity });
-      document.getElementById('itinActivity').value = "";
-      renderItineraryUI();
-    };
-
-    window.quickAddItinerary = (activityName) => {
-      itineraryItems.push({ id: Date.now(), day: "Day 1", time: "10:00", activity: activityName });
-      renderItineraryUI();
-      alert(`🗓️ "${activityName}" masuk ke My Itinerary!`);
-    };
-
-    window.removeItineraryItem = (id) => {
-      itineraryItems = itineraryItems.filter(item => item.id !== id);
-      renderItineraryUI();
-    };
-
-    function renderItineraryUI() {
-      const badge = document.getElementById('itinBadge');
-      if (itineraryItems.length === 0) badge.classList.add('hidden');
-      else { badge.innerText = itineraryItems.length; badge.classList.remove('hidden'); }
-
-      const container = document.getElementById('itineraryListContainer');
-      if (itineraryItems.length === 0) {
-        container.innerHTML = `<div class="text-center py-6 bg-white rounded-3xl border border-dashed border-[#DCE6E0] text-[11px] text-[#7A9186]">Belum ada jadwal tersusun.</div>`;
-        return;
-      }
-
-      const sorted = [...itineraryItems].sort((a, b) => a.day.localeCompare(b.day) || a.time.localeCompare(b.time));
-      container.innerHTML = sorted.map(item => `
-        <div class="relative pl-6 pb-2 border-l-2 border-[#2D5A4C]/30 last:border-transparent">
-          <span class="w-3 h-3 rounded-full bg-[#2D5A4C] absolute -left-[7px] top-3 ring-4 ring-[#E3EDE7]"></span>
-          <div class="bg-white border border-[#E3EDE7] rounded-2xl p-3 flex justify-between items-center shadow-sm">
-            <div>
-              <span class="text-[9px] font-extrabold text-[#2D5A4C] uppercase">${item.day} • ${item.time}</span>
-              <p class="font-bold text-[#1A2E26] text-xs mt-0.5">${item.activity}</p>
-            </div>
-            <button onclick="removeItineraryItem(${item.id})" class="text-[#8CA197] hover:text-red-500 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // --- GPS & MODAL ---
-    window.detectUserLocation = () => {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            const lat = pos.coords.latitude.toFixed(4);
-            const lng = pos.coords.longitude.toFixed(4);
-            document.getElementById('originInput').value = `GPS (${lat}, ${lng})`;
-            alert(`GPS Aktif di koordinat ${lat}, ${lng}`);
-          },
-          () => { alert("Izin GPS ditolak browser."); }
-        );
-      }
-    };
-
-    window.openServiceModal = (type) => {
-      const cat = bookingCatalog[type];
-      document.getElementById('serviceModalTitle').innerText = cat.title;
-      document.getElementById('serviceModalList').innerHTML = cat.items.map(item => `
-        <div class="border border-[#E3EDE7] rounded-2xl p-3.5 space-y-2 bg-[#F6F9F7]">
-          <div class="flex justify-between items-start">
-            <div>
-              <h4 class="font-bold text-xs text-[#1A2E26]">${item.name}</h4>
-              <p class="text-[10px] text-[#5C7268]">${item.info}</p>
-            </div>
-            <span class="font-extrabold text-xs text-[#2D5A4C]">${formatRp(item.price)}/${item.unit}</span>
-          </div>
-          <button onclick="addToPlan('${item.id}', '${item.name.replace(/'/g, "")}', '${item.cat}', ${item.price}); closeServiceModal();" class="w-full py-2 bg-[#2D5A4C] text-white font-bold text-[11px] rounded-full">
-            + Masukkan ke Trip Budget
-          </button>
-        </div>`).join('');
-      document.getElementById('serviceModal').classList.remove('hidden');
-    };
-    window.closeServiceModal = () => document.getElementById('serviceModal').classList.add('hidden');
-
-    // --- AUTH (EMAIL + GOOGLE SIGN-IN) ---
+    window.openPartnerModal = () => document.getElementById('partnerModal').classList.remove('hidden');
+    window.closePartnerModal = () => document.getElementById('partnerModal').classList.add('hidden');
     window.openAuthModal = () => document.getElementById('authModal').classList.remove('hidden');
     window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
-    window.toggleAuthMode = () => {
-      isRegisterMode = !isRegisterMode;
-      document.getElementById('authModalTitle').innerText = isRegisterMode ? "Daftar Akun Baru" : "Masuk Akun jelaja.com";
-      document.getElementById('nameFieldBox').classList.toggle('hidden', !isRegisterMode);
-      document.getElementById('authSubmitBtn').innerText = isRegisterMode ? "Daftar Sekarang" : "Masuk";
-      document.getElementById('authSwitchText').innerText = isRegisterMode ? "Sudah punya akun?" : "Belum punya akun?";
-      document.getElementById('authSwitchBtn').innerText = isRegisterMode ? "Masuk" : "Daftar Sekarang";
-    };
 
     window.loginWithGoogle = async () => {
       try {
         await signInWithPopup(auth, googleProvider);
-        alert("✅ Berhasil masuk dengan Google!");
+        alert("✅ Berhasil masuk!");
         closeAuthModal();
-      } catch (err) {
-        if (err.code === 'auth/unauthorized-domain') {
-          alert("⚠️ Domain Vercel lo belum ditambahkan di Firebase Console!\n\nBuka Firebase Console -> Authentication -> Settings -> Authorized domains -> Add domain: " + window.location.hostname);
-        } else {
-          alert("⚠️ Gagal Login Google: " + err.message);
-        }
-      }
+      } catch (err) { alert("Gagal: " + err.message); }
     };
 
-    document.getElementById('authForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('authEmail').value.trim();
-      const pass = document.getElementById('authPassword').value;
-      const name = document.getElementById('authName').value.trim();
-      try {
-        if (isRegisterMode) {
-          const cred = await createUserWithEmailAndPassword(auth, email, pass);
-          if (name) await updateProfile(cred.user, { displayName: name });
-          alert("✅ Pendaftaran berhasil!");
-        } else {
-          await signInWithEmailAndPassword(auth, email, pass);
-          alert("✅ Berhasil masuk!");
-        }
-        closeAuthModal();
-      } catch (err) {
-        if (err.code === 'auth/unauthorized-domain') {
-          alert("⚠️ Domain Vercel lo belum ditambahkan di Firebase Console!\n\nBuka Firebase Console -> Authentication -> Settings -> Authorized domains -> Add domain: " + window.location.hostname);
-        } else {
-          alert("⚠️ Gagal: " + err.message);
-        }
-      }
-    });
-
     onAuthStateChanged(auth, (user) => {
-      currentUser = user;
       if (user) {
-        const name = user.displayName || user.email.split('@')[0];
-        document.getElementById('headerUserLabel').innerText = name;
-        document.getElementById('greetingSub').innerText = `Hey ${name}, Welcome Back!`;
-        
-        // Update Profile UI
-        document.getElementById('profileName').innerText = name;
+        document.getElementById('headerUserLabel').innerText = user.displayName || "Akun";
+        document.getElementById('profileName').innerText = user.displayName;
         document.getElementById('profileEmail').innerText = user.email;
-        if (user.photoURL) {
-          document.getElementById('profileAvatarBox').innerHTML = `<img src="${user.photoURL}" class="w-full h-full object-cover">`;
-        }
         document.getElementById('loggedOutActionBox').classList.add('hidden');
         document.getElementById('btnLogoutRow').classList.remove('hidden');
-        loadUserSavedPlans(user.uid);
       } else {
         document.getElementById('headerUserLabel').innerText = "Masuk";
-        document.getElementById('greetingSub').innerText = "Welcome Back, Traveler";
-        document.getElementById('profileName').innerText = "Traveler Tamu";
-        document.getElementById('profileEmail').innerText = "Silakan masuk untuk sinkronisasi cloud";
-        document.getElementById('profileAvatarBox').innerHTML = `<i class="fa-solid fa-user"></i>`;
         document.getElementById('loggedOutActionBox').classList.remove('hidden');
         document.getElementById('btnLogoutRow').classList.add('hidden');
       }
     });
 
     window.logoutUser = () => signOut(auth);
-
-    window.savePlanToAccount = async () => {
-      if (!currentUser) { alert("Silakan masuk akun dulu!"); openAuthModal(); return; }
-      try {
-        await addDoc(collection(db, "user_plans"), {
-          uid: currentUser.uid,
-          origin: document.getElementById('originInput').value,
-          destination: document.getElementById('destinationInput').value,
-          pax, nights,
-          totalText: document.getElementById('totalBudgetText').innerText,
-          items: planItems,
-          itinerary: itineraryItems,
-          createdAt: new Date().toLocaleDateString('id-ID')
-        });
-        alert("✅ Trip tersimpan di Profile!");
-        loadUserSavedPlans(currentUser.uid);
-      } catch (e) { alert("Gagal menyimpan: " + e.message); }
-    };
-
-    async function loadUserSavedPlans(uid) {
-      try {
-        const q = query(collection(db, "user_plans"), where("uid", "==", uid));
-        const snap = await getDocs(q);
-        const box = document.getElementById('savedPlansList');
-        if (snap.empty) {
-          box.innerHTML = `<div class="bg-[#F8FAF9] border border-[#E8EFEA] rounded-2xl p-3.5 text-center text-[11px]">Belum ada perjalanan tersimpan di akun ini.</div>`;
-          return;
-        }
-        box.innerHTML = "";
-        snap.forEach(doc => {
-          const p = doc.data();
-          box.innerHTML += `
-            <div class="bg-[#F8FAF9] border border-[#E8EFEA] rounded-2xl p-3.5 shadow-xs">
-              <div class="flex justify-between font-bold text-[#1A2E26] text-xs">
-                <span>🎯 ${p.destination}</span>
-                <span class="text-[#2D5A4C]">${p.totalText}</span>
-              </div>
-              <p class="text-[10px] text-[#7A9186] mt-1">Dari: ${p.origin} • ${p.pax} Travellers • ${p.itinerary?.length || 0} Jadwal</p>
-            </div>`;
-        });
-      } catch (e) { console.error(e); }
-    }
-
-    // --- TRIP BUDGET ---
-    window.addToPlan = (id, name, category, unitPrice) => {
-      if (planItems.find(item => item.id === id)) { alert(`"${name}" sudah ada di Budget!`); return; }
-      planItems.push({ id, name, category, unitPrice });
-      updatePlannerUI();
-      alert(`✅ "${name}" masuk ke Trip Budget!`);
-    };
-
-    window.removePlanItem = (id) => { planItems = planItems.filter(item => item.id !== id); updatePlannerUI(); };
-    window.clearPlan = () => { planItems = []; updatePlannerUI(); };
-    window.changeMultiplier = (type, delta) => {
-      if (type === 'pax') pax = Math.max(1, pax + delta);
-      if (type === 'nights') nights = Math.max(1, nights + delta);
-      document.getElementById('paxCount').innerText = `${pax} Orang`;
-      document.getElementById('nightsCount').innerText = `${nights} Hari`;
-      updatePlannerUI();
-    };
-
-    function updatePlannerUI() {
-      const badge = document.getElementById('planBadge');
-      if (planItems.length === 0) badge.classList.add('hidden');
-      else { badge.innerText = planItems.length; badge.classList.remove('hidden'); }
-
-      let total = 0;
-      const container = document.getElementById('planItemsContainer');
-
-      if (planItems.length === 0) {
-        container.innerHTML = `<div class="text-center py-6 bg-white rounded-3xl border border-dashed border-[#DCE6E0] text-[11px] text-[#7A9186]">Belum ada komponen biaya dipilih.</div>`;
-      } else {
-        container.innerHTML = planItems.map(item => {
-          let sub = item.category === 'hotel' || item.category === 'rental' ? item.unitPrice * nights : item.unitPrice * pax;
-          total += sub;
-          return `
-            <div class="bg-white border border-[#E3EDE7] rounded-2xl p-3 flex justify-between items-center shadow-sm">
-              <div><p class="font-bold text-xs text-[#1A2E26]">${item.name}</p><p class="text-[10px] text-[#7A9186]">${formatRp(item.unitPrice)}</p></div>
-              <div class="flex items-center gap-2"><span class="font-bold text-xs">${formatRp(sub)}</span><button onclick="removePlanItem('${item.id}')" class="text-[#8CA197] hover:text-red-500"><i class="fa-solid fa-trash"></i></button></div>
-            </div>`;
-        }).join('');
-      }
-      document.getElementById('totalBudgetText').innerText = formatRp(total);
-    }
-
-    window.seedSuperAppData = async () => {
-      const btn = document.getElementById('btnSeed');
-      btn.disabled = true; btn.innerText = "Memuat...";
-
-      const seedList = [
-        {
-          short_label: "Medan Pusat",
-          name: "Lapangan Merdeka & Kesawan Medan",
-          badge: "City Heritage",
-          image: "https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=400&q=80",
-          lat: 3.5912, lng: 98.6773,
-          guide_steps: [
-            "Dari Bandara Kualanamu, naik KA Bandara Railink langsung menuju Stasiun Medan (35 menit).",
-            "Keluar dari pintu utama Stasiun Medan, jalan kaki 3 menit menuju kawasan heritage Kesawan."
-          ],
-          routes: [{ tag: "TERCEPAT", title: "KA Bandara Railink", total_duration: 35, total_price: 40000 }],
-          cafes: [{ name: "Kopi Janji Jiwa Merdeka Walk", cat: "Kafe", price: 25000, desc: "Nongkrong asik di pusat kota." }],
-          souvenirs: [{ name: "Pusat Bika Ambon Zulaikha", desc: "Oleh-oleh wajib khas Medan." }],
-          hotels: [{ name: "Grand City Hall Hotel", stars: "⭐⭐⭐⭐⭐", price: 950000, note: "Depan Lapangan Merdeka" }]
-        },
-        {
-          short_label: "Berastagi",
-          name: "Berastagi & Bukit Gundaling (Karo)",
-          badge: "Highland Escape",
-          image: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=400&q=80",
-          lat: 3.1852, lng: 98.5049,
-          guide_steps: [
-            "Dari pusat kota Medan, menuju loket Bus Sinabung Jaya di Padang Bulan.",
-            "Naik bus jurusan Berastagi melintasi jalur pegunungan Sibolangit (± 2 jam).",
-            "Turun di Tugu Perjuangan Berastagi, lanjut menuju Bukit Gundaling."
-          ],
-          routes: [{ tag: "BUS ANTAR KOTA", title: "Bus Sinabung Jaya (Medan → Berastagi)", total_duration: 120, total_price: 25000 }],
-          cafes: [{ name: "Green Garden Cafe Berastagi", cat: "Kafe Sejuk", price: 30000, desc: "Pemandangan pegunungan." }],
-          souvenirs: [{ name: "Pasar Buah Berastagi", desc: "Sentra buah segar & oleh-oleh lokal." }],
-          hotels: [{ name: "Mikie Holiday Resort", stars: "⭐⭐⭐⭐", price: 850000, note: "Resort & Funland" }]
-        }
-      ];
-
-      for (const item of seedList) {
-        await addDoc(collection(db, "destinations_v4"), item);
-      }
-      alert("Data jelaja.com berhasil dimuat!");
-      loadDestinations();
-    };
-
     window.switchTab = (tab) => {
-      // Sembunyikan top bar putih jika masuk tab Profile (karena Profile punya header Forest Green sendiri)
-      document.getElementById('mainTopHeader').classList.toggle('hidden', tab === 'account');
-
-      ['explore', 'budget', 'itinerary', 'account'].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
-        const btn = document.getElementById(`nav-${t}`);
-        btn.className = t === tab 
-          ? "flex flex-col items-center text-[#84D2B9] font-bold px-2" 
-          : "flex flex-col items-center text-[#94ABA0] hover:text-white font-medium px-2 relative";
-      });
-      if (tab === 'explore' && map) setTimeout(() => map.invalidateSize(), 200);
+      document.getElementById('tab-explore').classList.toggle('hidden', tab !== 'explore');
+      document.getElementById('tab-account').classList.toggle('hidden', tab !== 'account');
     };
 
     initMap();
-    renderItineraryUI();
     loadDestinations();
   </script>
 </body>
