@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>jelaja.com - Your Journey, Intelligently Planned</title>
+  <title>jelaja.com - Temukan Akses, Rencanakan Perjalanan</title>
   <meta name="theme-color" content="#2D5A4C">
   <link rel="manifest" href="manifest.json">
   
@@ -196,8 +196,33 @@
         </div>
       </div>
 
+      <section class="bg-white border border-[#E3EDE7] rounded-3xl p-4 space-y-3">
+        <div>
+          <h3 class="font-bold text-sm text-[#1A2E26]">Rincian estimasi biaya perjalanan</h3>
+          <p class="text-[10px] text-[#7A9186] mt-1">Isi atau ubah harga satuan. Sistem menghitung total berdasarkan jumlah traveler dan malam menginap.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <label class="text-[10px] font-bold text-[#5C7268]">Transportasi utama PP / orang<input id="costMainTransport" type="number" min="0" value="1500000" oninput="updateDetailedBudget()" class="mt-1 w-full p-2.5 rounded-xl border border-[#DCE6E0] bg-[#F8FAF9] text-xs"></label>
+          <label class="text-[10px] font-bold text-[#5C7268]">Transfer bandara / orang<input id="costAirport" type="number" min="0" value="100000" oninput="updateDetailedBudget()" class="mt-1 w-full p-2.5 rounded-xl border border-[#DCE6E0] bg-[#F8FAF9] text-xs"></label>
+          <label class="text-[10px] font-bold text-[#5C7268]">Transport lokal / hari / orang<input id="costLocal" type="number" min="0" value="50000" oninput="updateDetailedBudget()" class="mt-1 w-full p-2.5 rounded-xl border border-[#DCE6E0] bg-[#F8FAF9] text-xs"></label>
+          <label class="text-[10px] font-bold text-[#5C7268]">Hotel / kamar / malam<input id="costHotel" type="number" min="0" value="350000" oninput="updateDetailedBudget()" class="mt-1 w-full p-2.5 rounded-xl border border-[#DCE6E0] bg-[#F8FAF9] text-xs"></label>
+          <label class="text-[10px] font-bold text-[#5C7268]">Konsumsi / hari / orang<input id="costMeals" type="number" min="0" value="100000" oninput="updateDetailedBudget()" class="mt-1 w-full p-2.5 rounded-xl border border-[#DCE6E0] bg-[#F8FAF9] text-xs"></label>
+          <label class="text-[10px] font-bold text-[#5C7268]">Tiket wisata / orang<input id="costAttractions" type="number" min="0" value="100000" oninput="updateDetailedBudget()" class="mt-1 w-full p-2.5 rounded-xl border border-[#DCE6E0] bg-[#F8FAF9] text-xs"></label>
+          <label class="text-[10px] font-bold text-[#5C7268]">Oleh-oleh / orang<input id="costSouvenir" type="number" min="0" value="100000" oninput="updateDetailedBudget()" class="mt-1 w-full p-2.5 rounded-xl border border-[#DCE6E0] bg-[#F8FAF9] text-xs"></label>
+          <label class="text-[10px] font-bold text-[#5C7268]">Biaya lain / orang<input id="costOther" type="number" min="0" value="50000" oninput="updateDetailedBudget()" class="mt-1 w-full p-2.5 rounded-xl border border-[#DCE6E0] bg-[#F8FAF9] text-xs"></label>
+          <label class="text-[10px] font-bold text-[#5C7268]">Jumlah kamar hotel<input id="hotelRooms" type="number" min="1" value="1" oninput="updateDetailedBudget()" class="mt-1 w-full p-2.5 rounded-xl border border-[#DCE6E0] bg-[#F8FAF9] text-xs"></label>
+          <label class="text-[10px] font-bold text-[#5C7268]">Dana cadangan (%)<input id="costBuffer" type="number" min="0" max="100" value="10" oninput="updateDetailedBudget()" class="mt-1 w-full p-2.5 rounded-xl border border-[#DCE6E0] bg-[#F8FAF9] text-xs"></label>
+        </div>
+        <div class="bg-[#F6F9F7] rounded-2xl p-3 space-y-2">
+          <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-[#5C7268]">BREAKDOWN OTOMATIS</span><span class="text-[9px] text-[#7A9186]">Simulasi, bukan harga live</span></div>
+          <div id="detailedBudgetRows" class="space-y-2 text-xs"></div>
+          <div class="border-t border-[#DCE6E0] pt-2 flex justify-between items-center"><span class="font-extrabold text-xs">Total estimasi</span><strong id="detailedBudgetTotal" class="text-[#2D5A4C] text-base">Rp 0</strong></div>
+          <p id="budgetPerPerson" class="text-[10px] text-[#7A9186]"></p>
+        </div>
+      </section>
+
       <div class="space-y-2">
-        <h3 class="font-bold text-xs text-[#1A2E26]">Rincian Tiket & Akomodasi</h3>
+        <h3 class="font-bold text-xs text-[#1A2E26]">Biaya tambahan pilihanmu</h3>
         <div id="planItemsContainer" class="space-y-2 text-xs"></div>
       </div>
 
@@ -342,6 +367,8 @@
     let allDestinations = [];
     let currentDest = null;
     let map, markersLayer, routeLineLayer;
+    let nearbyPlaces = [];
+    let nearbyRequestToken = 0;
     let planItems = [];
     let itineraryItems = [
       { id: 1, day: "Day 1", time: "08:30", activity: "Berangkat menuju moda transportasi utama" }
@@ -397,6 +424,7 @@
       initMap();
       loadDestinations();
       renderItineraryUI();
+      updateDetailedBudget();
     });
 
     async function loadDestinations() {
@@ -530,6 +558,109 @@
       }
     };
 
+    const poiTypeLabels = {
+      restaurant: "Restoran", cafe: "Cafe", fast_food: "Makanan cepat saji",
+      convenience: "Minimarket", supermarket: "Supermarket", hotel: "Hotel",
+      pharmacy: "Apotek", atm: "ATM", bank: "Bank", gift: "Oleh-oleh",
+      museum: "Museum", attraction: "Tempat wisata", viewpoint: "Pemandangan",
+      bus_station: "Terminal / Bus", railway_station: "Stasiun", marketplace: "Pasar"
+    };
+
+    function getPoiCategory(tags = {}) {
+      if (tags.amenity === "restaurant") return "restaurant";
+      if (tags.amenity === "cafe") return "cafe";
+      if (tags.amenity === "fast_food") return "fast_food";
+      if (tags.shop === "convenience") return "convenience";
+      if (tags.shop === "supermarket") return "supermarket";
+      if (tags.tourism === "hotel" || tags.amenity === "hotel") return "hotel";
+      if (tags.amenity === "pharmacy") return "pharmacy";
+      if (tags.amenity === "atm") return "atm";
+      if (tags.amenity === "bank") return "bank";
+      if (tags.shop === "gift" || tags.shop === "souvenir") return "gift";
+      if (tags.tourism === "museum") return "museum";
+      if (tags.tourism === "attraction" || tags.historic) return "attraction";
+      if (tags.tourism === "viewpoint") return "viewpoint";
+      if (tags.amenity === "bus_station") return "bus_station";
+      if (tags.railway === "station") return "railway_station";
+      if (tags.amenity === "marketplace") return "marketplace";
+      return "place";
+    }
+
+    function distanceKmBetween(lat1, lon1, lat2, lon2) {
+      const rad = v => v * Math.PI / 180;
+      const dLat = rad(lat2 - lat1), dLon = rad(lon2 - lon1);
+      const a = Math.sin(dLat/2)**2 + Math.cos(rad(lat1))*Math.cos(rad(lat2))*Math.sin(dLon/2)**2;
+      return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    async function loadNearbyPlaces(lat, lng) {
+      const token = ++nearbyRequestToken;
+      const target = document.getElementById("content-things");
+      target.innerHTML = `<div class="bg-white rounded-2xl p-4 text-[11px] text-[#7A9186]">Memuat tempat di sekitar lokasi...</div>`;
+      const queryText = `[out:json][timeout:20];(nwr(around:1600,${lat},${lng})[amenity~"^(restaurant|cafe|fast_food|pharmacy|atm|bank|bus_station|marketplace)$"];nwr(around:1600,${lat},${lng})[shop~"^(convenience|supermarket|gift|souvenir)$"];nwr(around:1600,${lat},${lng})[tourism~"^(hotel|museum|attraction|viewpoint)$"];nwr(around:1600,${lat},${lng})[railway=station];);out center tags;`;
+      try {
+        const response = await fetch("https://overpass-api.de/api/interpreter", {
+          method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+          body: "data=" + encodeURIComponent(queryText)
+        });
+        if (!response.ok) throw new Error("Layanan peta sedang sibuk (" + response.status + ")");
+        const payload = await response.json();
+        if (token !== nearbyRequestToken) return;
+        const seen = new Set();
+        nearbyPlaces = (payload.elements || []).map(el => {
+          const tags = el.tags || {};
+          const pointLat = el.lat ?? el.center?.lat;
+          const pointLng = el.lon ?? el.center?.lon;
+          const name = tags.name || tags["name:id"] || tags.brand || tags.operator;
+          if (!name || !Number.isFinite(pointLat) || !Number.isFinite(pointLng)) return null;
+          const key = `${name.toLowerCase()}-${pointLat.toFixed(4)}-${pointLng.toFixed(4)}`;
+          if (seen.has(key)) return null;
+          seen.add(key);
+          const category = getPoiCategory(tags);
+          return { id: `${el.type}-${el.id}`, name, category, label: poiTypeLabels[category] || "Tempat menarik", lat: pointLat, lng: pointLng, distance: distanceKmBetween(lat,lng,pointLat,pointLng), address: [tags["addr:street"], tags["addr:suburb"]].filter(Boolean).join(", "), website: tags.website || tags["contact:website"] || "" };
+        }).filter(Boolean).sort((a,b) => a.distance-b.distance).slice(0,45);
+        renderNearbyPlaces(lat, lng);
+      } catch (error) {
+        console.warn("Nearby places gagal dimuat:", error);
+        if (token !== nearbyRequestToken) return;
+        target.innerHTML = `<div class="bg-white border border-amber-100 rounded-2xl p-4 text-[11px] text-[#7A9186]">Tempat sekitar belum bisa dimuat. Coba beberapa saat lagi. Pastikan koneksi internet aktif.</div>`;
+      }
+    }
+
+    function renderNearbyPlaces(centerLat, centerLng) {
+      const target = document.getElementById("content-things");
+      if (!nearbyPlaces.length) {
+        target.innerHTML = `<div class="bg-white rounded-2xl p-4 text-[11px] text-[#7A9186]">Belum ada data tempat bernama yang ditemukan dalam radius 1,6 km.</div>`;
+        return;
+      }
+      const categoryIcon = { restaurant:"🍽️", cafe:"☕", fast_food:"🍔", convenience:"🏪", supermarket:"🛒", hotel:"🏨", pharmacy:"💊", atm:"🏧", bank:"🏦", gift:"🎁", museum:"🏛️", attraction:"📍", viewpoint:"🌄", bus_station:"🚌", railway_station:"🚆", marketplace:"🛍️" };
+      target.innerHTML = `<div class="flex justify-between items-center px-1"><span class="text-[10px] font-bold text-[#2D5A4C]">${nearbyPlaces.length} tempat ditemukan</span><span class="text-[9px] text-[#7A9186]">Radius 1,6 km • OpenStreetMap</span></div>` + nearbyPlaces.map((place, idx) => `
+        <button onclick="focusNearbyPlace(${idx})" class="w-full text-left bg-white border border-[#E3EDE7] rounded-2xl p-3 flex items-center gap-3 shadow-sm">
+          <span class="w-10 h-10 rounded-xl bg-[#E3EDE7] flex items-center justify-center text-lg shrink-0">${categoryIcon[place.category] || "📍"}</span>
+          <span class="min-w-0 flex-1"><span class="block font-bold text-xs text-[#1A2E26] truncate">${place.name}</span><span class="block text-[10px] text-[#7A9186] mt-0.5">${place.label}${place.address ? " • " + place.address : ""}</span></span>
+          <span class="text-[10px] font-bold text-[#2D5A4C] shrink-0">${place.distance.toFixed(1)} km</span>
+        </button>`).join("");
+
+      if (markersLayer) {
+        nearbyPlaces.forEach(place => {
+          const marker = L.circleMarker([place.lat, place.lng], { radius: 5, color: "#D97706", fillColor: "#FBBF24", fillOpacity: .95, weight: 1.5 });
+          marker.bindPopup(`<strong>${escapeHtml(place.name)}</strong><br><small>${escapeHtml(place.label)} • ${place.distance.toFixed(1)} km</small>`);
+          marker.addTo(markersLayer);
+        });
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+    }
+
+    window.focusNearbyPlace = (index) => {
+      const place = nearbyPlaces[index];
+      if (!place || !map) return;
+      map.setView([place.lat, place.lng], 16);
+      markersLayer.eachLayer(layer => { if (layer.getLatLng && layer.getLatLng().lat === place.lat && layer.getLatLng().lng === place.lng) layer.openPopup(); });
+    };
+
     function renderDestination(data) {
       currentDest = data;
       document.getElementById('activeDestTitle').innerText = data.name;
@@ -555,9 +686,9 @@
         if (markersLayer) markersLayer.clearLayers();
         if (routeLineLayer) routeLineLayer.clearLayers();
 
-        L.circleMarker([userLat, userLng], { radius: 6, color: '#10B981', fillColor: '#10B981', fillOpacity: 1 }).addTo(markersLayer);
-        L.circleMarker([destLat, destLng], { radius: 8, color: '#2D5A4C', fillColor: '#2D5A4C', fillOpacity: 1 }).addTo(markersLayer);
-        L.polyline([[userLat, userLng], [destLat, destLng]], { color: '#2D5A4C', weight: 3.5, dashArray: '6, 6' }).addTo(routeLineLayer);
+        L.circleMarker([destLat, destLng], { radius: 9, color: '#2D5A4C', fillColor: '#2D5A4C', fillOpacity: 1 }).bindPopup(`<strong>${escapeHtml(data.short_label || data.name)}</strong><br><small>Destinasi pilihan</small>`).addTo(markersLayer);
+        // Jangan menggambar garis lurus lintas kota: itu bukan rute jalan/transportasi yang valid.
+        loadNearbyPlaces(destLat, destLng);
       }
 
       // 1. Render Transportasi & Jadwal (Fitur Utama)
@@ -580,17 +711,8 @@
           </div>
         </div>`).join('');
 
-      // 2. Render Spot Sekitar (Kafe, Minimarket, Tempat Makan)
-      const cafes = data.cafes || [{ name: "Kafe & Resto Lokal", cat: "Kuliner", price: 30000, desc: "Tempat nongkrong terdekat" }];
-      document.getElementById('content-things').innerHTML = cafes.map((c, idx) => `
-        <div class="bg-white border border-[#E3EDE7] rounded-3xl p-3.5 shadow-sm flex justify-between items-center gap-2">
-          <div>
-            <span class="text-[9px] bg-amber-50 text-amber-800 font-bold px-2.5 py-0.5 rounded-full">☕ ${c.cat || 'Kuliner'}</span>
-            <h4 class="font-bold text-xs text-[#1A2E26] mt-1">${c.name}</h4>
-            <p class="text-[10px] text-[#7A9186]">${c.desc} • Est. ${formatRp(c.price)}</p>
-          </div>
-          <button onclick="addToPlan('cafe_${idx}', '${c.name.replace(/'/g, "")}', 'activity', ${c.price})" class="bg-[#2D5A4C] text-white font-bold text-[10px] px-3 py-1.5 rounded-full shrink-0">+ Budget</button>
-        </div>`).join('');
+      // 2. Spot sekitar dimuat dari OpenStreetMap berdasarkan koordinat destinasi.
+      document.getElementById('content-things').innerHTML = `<div class="bg-white rounded-2xl p-4 text-[11px] text-[#7A9186]">Mencari restoran, cafe, minimarket, hotel, apotek, ATM, dan tempat menarik di sekitar lokasi...</div>`;
 
       // 3. Render Hotel & Stay
       const hotels = data.hotels || [{ name: "Hotel Nyaman Sekitar Lokasi", stars: "⭐⭐⭐", price: 450000, note: "Strategis" }];
@@ -634,8 +756,35 @@
       if (type === 'pax') pax = Math.max(1, pax + delta);
       if (type === 'nights') nights = Math.max(1, nights + delta);
       document.getElementById('paxCount').innerText = `${pax} Orang`;
-      document.getElementById('nightsCount').innerText = `${nights} Hari`;
+      document.getElementById('nightsCount').innerText = `${nights} Malam`;
       updatePlannerUI();
+    };
+
+    const costInputIds = ["costMainTransport","costAirport","costLocal","costHotel","costMeals","costAttractions","costSouvenir","costOther","hotelRooms","costBuffer"];
+    function costValue(id) { return Math.max(0, Number(document.getElementById(id)?.value || 0)); }
+
+    window.updateDetailedBudget = () => {
+      const p = pax, n = nights, days = n + 1;
+      const rooms = Math.max(1, Math.ceil(costValue("hotelRooms")));
+      const baseRows = [
+        ["Transportasi utama pulang-pergi", costValue("costMainTransport") * p, `${p} orang × ${formatRp(costValue("costMainTransport"))}`],
+        ["Transfer bandara / terminal", costValue("costAirport") * p, `${p} orang × ${formatRp(costValue("costAirport"))}`],
+        ["Transportasi lokal", costValue("costLocal") * p * days, `${p} orang × ${days} hari × ${formatRp(costValue("costLocal"))}`],
+        ["Hotel / penginapan", costValue("costHotel") * rooms * n, `${rooms} kamar × ${n} malam × ${formatRp(costValue("costHotel"))}`],
+        ["Konsumsi", costValue("costMeals") * p * days, `${p} orang × ${days} hari × ${formatRp(costValue("costMeals"))}`],
+        ["Tiket masuk tempat wisata", costValue("costAttractions") * p, `${p} orang × ${formatRp(costValue("costAttractions"))}`],
+        ["Oleh-oleh", costValue("costSouvenir") * p, `${p} orang × ${formatRp(costValue("costSouvenir"))}`],
+        ["Biaya lain-lain", costValue("costOther") * p, `${p} orang × ${formatRp(costValue("costOther"))}`]
+      ];
+      const subtotal = baseRows.reduce((sum,row) => sum + row[1], 0);
+      const bufferRate = Math.min(100, costValue("costBuffer"));
+      const buffer = Math.round(subtotal * bufferRate / 100);
+      const extraItems = planItems.reduce((sum,item) => sum + ((item.category === "hotel" || item.category === "rental") ? item.unitPrice * n : item.unitPrice * p), 0);
+      const grandTotal = subtotal + buffer + extraItems;
+      document.getElementById("detailedBudgetRows").innerHTML = baseRows.map(row => `<div class="flex justify-between gap-3"><div class="min-w-0"><b class="block text-[#1A2E26]">${row[0]}</b><span class="text-[9px] text-[#7A9186]">${row[2]}</span></div><b class="shrink-0 text-[#1A2E26]">${formatRp(row[1])}</b></div>`).join("") + `<div class="flex justify-between gap-3 border-t border-[#DCE6E0] pt-2"><span>Dana cadangan (${bufferRate}%)</span><b>${formatRp(buffer)}</b></div>` + (extraItems ? `<div class="flex justify-between gap-3"><span>Biaya tambahan pilihan</span><b>${formatRp(extraItems)}</b></div>` : "");
+      document.getElementById("detailedBudgetTotal").innerText = formatRp(grandTotal);
+      document.getElementById("budgetPerPerson").innerText = `Rata-rata ${formatRp(p ? grandTotal / p : grandTotal)} per orang • ${p} traveler • ${n} malam (${days} hari)`;
+      document.getElementById("totalBudgetText").innerText = formatRp(grandTotal);
     };
 
     function updatePlannerUI() {
@@ -658,7 +807,7 @@
             </div>`;
         }).join('');
       }
-      document.getElementById('totalBudgetText').innerText = formatRp(total);
+      updateDetailedBudget();
     }
 
     window.addItineraryItem = () => {
